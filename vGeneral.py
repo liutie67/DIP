@@ -518,10 +518,13 @@ class vGeneral(abc.ABC):
                 rho = 0
             penaltyStrength = ' -pnlt-beta ' + str(rho)
         elif (method == 'ADMMLim'):
+            '''
             mu = 2      # mu = 10 or     mu = 2
             tau = 100  # tau = 2 or tau_max = 100
             xi = 1
             opti = ' -opti ADMMLim' + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            '''
+            opti = ' -opti ADMMLim' + ',' + str(self.alpha)
             pnlt = ' -pnlt ' + penalty
             if penalty == "MRF":
                 pnlt += ':' + self.subroot_data + method + '_MRF.conf'

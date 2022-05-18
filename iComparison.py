@@ -129,6 +129,7 @@ class iComparison(vReconstruction):
             print(x_reconstruction_command_line)
             self.compute_x_v_u_ADMM(x_reconstruction_command_line,full_output_path_k_next,subdir,i,k,self.phantom,subroot_output_path,self.subroot_data)
 
+            '''
             # AdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRhoAdaptiveRho
             path_adaptive_alpha = subroot_output_path + '/' + subdir + '/' + format(i) + '_' + format(
                 k+1) + '_adaptive_alpha.log'
@@ -143,6 +144,7 @@ class iComparison(vReconstruction):
             castor_command_line_x = self.castor_common_command_line(self.subroot_data, self.PETImage_shape_str,
                                                                     self.phantom, self.replicate,
                                                                     self.post_smoothing) + self.castor_opti_and_penalty(self.method, self.penalty, self.rho)
+            '''
 
     def NNEPPS_function(self,fixed_config,hyperparameters_config,it):
         executable='removeNegativeValues.exe'
