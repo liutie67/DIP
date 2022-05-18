@@ -1,0 +1,15 @@
+/data/Algo/Data/database_v2
+/data/Algo/Data/initialization
+/data/Algo/Data/MLEM_reco_for_init
+
+/data/Algo/debug
+/data/Algo/image0
+/data/Algo/metrics
+
+/data/Algo/suffixes*
+
+/__pycache__
+/models/__pycache__
+
+/runs
+/runs1

@@ -1,0 +1,53 @@
+export CASTOR_OMP=1 # Enable multithreading
+export PATH=$PATH:your/link/to/castor/folder/castor_v3.1/bin
+export CASTOR_CONFIG=your/link/to/castor/folder/castor_v3.1/config # Path to the default CASToR config directory
+chmod +x your/link/to/castor/folder/castor_v3.1/bin/*
+
+export PATH=$PATH:your/link/to/removeNegativeValues/folder/removeNegativeValues/
+chmod +x your/link/to/removeNegativeValues/folder/removeNegativeValues/removeNegativeValues.exe
+
+
+cd sgld/hernan_folder
+source env/bin/activate
+
+code . --ignore-certificate-errors
+
+tensorboard --logdir=runs --bind_all --load_fast=false &
+
+kill %1
+
+watch -n 0.1 nvidia-smi
+
+kill -9 <PID>
+
+./ongoing.sh -o BSREM -b 1 -i 16 -s 6
+
+##################### plus rares ##################### 
+
+export CASTOR_CONFIG=/home/meraslia/sgld/software/castor_v3.1/hyperparameters_config/
+
+# TOKEN
+git push https://TOKEN@github.com/alexandremerasli/DIP.git HEAD:positive_proj
+git pull https://TOKEN@github.com/alexandremerasli/DIP.git
+
+or
+
+git remote set-url origin https://alexandremerasli:TOKEN@github.com/alexandremerasli/DIP.git
+git push
+
+
+sed -i -e 's/new_norm_vol_classic/stand_imag/g' utils/common_utils.py
+
+## si pb de memoire sur gpu
+sudo service gdm3 stop
+
+sudo rmmod nvidia_uvm
+sudo rmmod nvidia_drm
+sudo rmmod nvidia_modeset
+sudo rmmod nvidia
+
+# Then, reload them if desired:
+sudo modprobe nvidia
+sudo modprobe nvidia_modeset
+sudo modprobe nvidia_drm
+sudo modprobe nvidia_uvm
