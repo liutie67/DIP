@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import datetime
 
 subroot = os.getcwd() + '/data/Algo'
+baseroot = os.getcwd()
 image = 'image0'
 
 def read_input_dim(file_path):
@@ -90,39 +91,39 @@ def dldir(path):
 
 
 def moveData(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
-    src = '/home/liutie/STAGE-STING/DIP/data/Algo/image0/*'
+    src = baseroot + '/DIP/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/' + str(copies) + '/'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
-    os.system('rm -fr /home/liutie/STAGE-STING/DIP/data/Algo/debug/*')
-    os.system('rm -fr /home/liutie/STAGE-STING/DIP/data/Algo/metrics/*')
+    os.system('rm -fr ' + baseroot + '/DIP/data/Algo/debug/*')
+    os.system('rm -fr ' + baseroot + '/DIP/data/Algo/metrics/*')
 
 
 def moveRuns(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
-    src = '/home/liutie/STAGE-STING/DIP/runs/*'
+    src = baseroot + '/DIP/runs/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/tb/tb' + str(copies) + '/'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
 
 def initialALL():
-    os.system('rm -rf /home/liutie/STAGE-STING/DIP/data/Algo/debug/')
-    os.system('rm -rf /home/liutie/STAGE-STING/DIP/data/Algo/metrics/')
-    os.system('rm -rf /home/liutie/STAGE-STING/DIP/data/Algo/image0/')
-    os.system('rm -rf /home/liutie/STAGE-STING/DIP/runs/*')
+    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/debug/')
+    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/metrics/')
+    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/image0/')
+    os.system('rm -rf ' + baseroot + '/DIP/runs/*')
 
 
 def moveALL():
     time = datetime.datetime.now()
 
-    src = '/home/liutie/STAGE-STING/DIP/data/Algo/image0/*'
+    src = baseroot + '/DIP/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
           + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second)
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
-    src = '/home/liutie/STAGE-STING/DIP/runs/*'
-    dtn = '/home/liutie/Documents/outputDatabase#/'  + str(time.year) + '-' + str(time.month) + '-' \
+    src = baseroot + '/DIP/runs/*'
+    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
           + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second) + '/tb'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
