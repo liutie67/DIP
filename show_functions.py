@@ -116,13 +116,13 @@ def initialALL():
 def moveALL():
     time = datetime.datetime.now()
 
-    src = baseroot + '/DIP/data/Algo/image0/*'
+    src = baseroot + '/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
           + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second)
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
-    src = baseroot + '/DIP/runs/*'
+    src = baseroot + '/runs/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
           + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second) + '/tb'
     mkdir(dtn)
