@@ -133,16 +133,11 @@ class iComparison(vReconstruction):
             # Number of iterations from config dictionnary
             it = ' -it ' + str(hyperparameters_config["sub_iter_PLL"]) + ':1'  # 1 subset
 
-            g_for_multimodal_image = ' -multimodal ' + subroot_output_path + '/' + subdir + '/' + format(i) \
-                                     + '_' + format(k+1) + '_g_OSadvance.hdr'
-            self.write_hdr(self.subroot_data, [i, k + 1], subdir, self.phantom, 'g_OSadvance',
-                           subroot_output_path=subroot_output_path, matrix_type='img')
-
             x_reconstruction_command_line = castor_command_line_x \
                                             + self.castor_opti_and_penalty(self.method, self.penalty, self.rho) \
                                             + ' -fout ' + full_output_path_k_next + it + u_for_additional_data \
                                             + v_for_additional_data + initialimage + f_mu_for_penalty \
-                                            + conv + g_for_multimodal_image # we need f-mu so that ADMM optimizer works, even if we will not use it...
+                                            + conv # we need f-mu so that ADMM optimizer works, even if we will not use it...
 
             # x_reconstruction_command_line = castor_command_line_x + ' -fout ' + full_output_path_k_next + it + ' -additional-data /home/meraslia/sgld/hernan_folder/data/Algo/0_8_u.hdr -additional-data /home/meraslia/sgld/hernan_folder/data/Algo/0_8_v.hdr -multimodal /home/meraslia/sgld/hernan_folder/data/Algo/Data/initialization/1_im_value_cropped.hdr'# -img /home/meraslia/sgld/hernan_folder/data/Algo/0_8_it10.hdr'
 
