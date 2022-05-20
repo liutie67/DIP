@@ -7,16 +7,18 @@ from show_functions import getDatabasePath, getDataFolderPath, dldir
 import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(3) + '/'
-dataFolderPath = 'ADMM-old-adapAT+a0=...*(mu=2,tau-rel_max=100)'
+databasePath = getDatabasePath(4) + '/'
+dataFolderPath = 'ADMM-merged(double)+i50+o70+a=*9'
+vb = 1
+threads = 128
 
 tuners_tag = 'alphas'  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     outerIteration = 70
-    innerIteration = 50
+    innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = [1]
+    alphas = tuners.alphas0
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -70,14 +72,23 @@ for i in range(len(tuners)):
         likelihoods = []
         for outer_iter in range(1, outerIteration+1):
             logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
-                       + str(tuners[i]) + '_mlem_=False/ADMM_64/'
+                       + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
             logfile_name = '0_' + str(outer_iter) + '.log'
             path_log = logfolder + logfile_name
             theLog = pd.read_table(path_log)
-            theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
-            theLikelihoodRowArray = np.array(theLikelihoodRow)
-            theLikelihoodRowString = theLikelihoodRowArray[0, 0]
-            theLikelihoodRowString = theLikelihoodRowString[22:44]
+            if vb == 3:
+                theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
+                theLikelihoodRowArray = np.array(theLikelihoodRow)
+                theLikelihoodRowString = theLikelihoodRowArray[0, 0]
+                theLikelihoodRowString = theLikelihoodRowString[22:44]
+            elif vb == 1:
+                theLikelihoodRow = theLog.loc[[theLog.shape[0] - 11]]
+                theLikelihoodRowArray = np.array(theLikelihoodRow)
+                theLikelihoodRowString = theLikelihoodRowArray[0, 0]
+                theLikelihoodRowString = theLikelihoodRowString[22:44]
+            else:
+                print('************************* verbose(vb) is wrongly set! *************************')
+                break
             if theLikelihoodRowString[0] == '-':
                 theLikelihoodRowString = '0'
             likelihood = float(theLikelihoodRowString)
@@ -85,7 +96,7 @@ for i in range(len(tuners)):
                 likelihoods_alpha.append(likelihood)
             likelihoods.append(likelihood)
 
-        beginning = 0
+        beginning = 1
         if tuners[i] == bestAlpha:
             plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], 'r-x', label=str(alphas[i]))
         elif i < 10:

@@ -107,10 +107,10 @@ def moveRuns(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
 
 
 def initialALL():
-    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/debug/')
-    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/metrics/')
-    os.system('rm -rf ' + baseroot + '/DIP/data/Algo/image0/')
-    os.system('rm -rf ' + baseroot + '/DIP/runs/*')
+    os.system('rm -rf ' + baseroot + '/data/Algo/debug/')
+    os.system('rm -rf ' + baseroot + '/data/Algo/metrics/')
+    os.system('rm -rf ' + baseroot + '/data/Algo/image0/')
+    os.system('rm -rf ' + baseroot + '/runs/*')
 
 
 def moveALL():
