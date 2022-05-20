@@ -8,7 +8,7 @@ import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(4) + '/'
-dataFolderPath = 'ADMM-merged(double+1step)+i50+o70+a=*9'
+dataFolderPath = 'ADMM-merged(double+1step+non-update)+i50+o70+a=*9'
 vb = 1
 threads = 128
 
@@ -18,7 +18,7 @@ if tuners_tag == 'alphas':
     innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = tuners.alphas0
+    alphas = [0.005, 0.01, 0.05, 0.1, 0.6, 0.9, 1]
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
