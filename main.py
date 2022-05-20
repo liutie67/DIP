@@ -34,7 +34,8 @@ def specialTask(method_special='nested',
                 rho_special=0,
                 DIP_special=False,
                 nb_subsets=28,
-                mlem_sequence=False):
+                mlem_sequence=False,
+                threads=128):
 
     # Configuration dictionnary for general parameters (not hyperparameters)
     fixed_config = {
@@ -42,7 +43,7 @@ def specialTask(method_special='nested',
         "net" : tune.grid_search(['DIP']), # Network to use (DIP,DD,DD_AE,DIP_VAE)
         "method" : tune.grid_search([method_special]), # Reconstruction algorithm (nested, Gong, or algorithms from CASToR (MLEM, BSREM, AML, etc.))
         "processing_unit" : tune.grid_search(['CPU']), # CPU or GPU
-        "nb_threads" : tune.grid_search([128]), # Number of desired threads. 0 means all the available threads
+        "nb_threads" : tune.grid_search([threads]), # Number of desired threads. 0 means all the available threads
         "FLTNB" : tune.grid_search(['double']), # FLTNB precision must be set as in CASToR (double necessary for ADMMLim and nested)
         "debug" : False, # Debug mode = run without raytune and with one iteration
         "max_iter" : tune.grid_search([max_iter]), # Number of global iterations for usual optimizers (MLEM, BSREM, AML etc.) and for nested

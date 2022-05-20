@@ -8,7 +8,7 @@ import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(4) + '/'
-dataFolderPath = 'ADMM-merged(double)+i50+o70+a=*9'
+dataFolderPath = 'ADMM-merged(double+1step)+i50+o70+a=*9'
 vb = 1
 threads = 128
 
