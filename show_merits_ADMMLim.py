@@ -7,8 +7,8 @@ from show_functions import getDatabasePath, getDataFolderPath, dldir
 import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(4) + '/'
-dataFolderPath = 'ADMM-merged(double+1step+non-update)+i50+o70+a=*9'
+databasePath = getDatabasePath(5) + '/'
+dataFolderPath = 'ADMM-delayedUpdate+i50*2+o70+a=*4'
 vb = 1
 threads = 128
 
@@ -18,7 +18,7 @@ if tuners_tag == 'alphas':
     innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = [0.005, 0.01, 0.05, 0.1, 0.6, 0.9, 1]
+    alphas = tuners.alphas2
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
