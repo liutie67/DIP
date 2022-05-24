@@ -8,7 +8,7 @@ import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(5) + '/'
-dataFolderPath = 'ADMM-delayedUpdate+i50*2+o70+a=*4'
+dataFolderPath = 'ADMM-delayedUpdate+NONadp+i50*2+o70+a=78910(tau100mu2))'
 vb = 1
 threads = 128
 
@@ -18,7 +18,7 @@ if tuners_tag == 'alphas':
     innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = tuners.alphas2
+    alphas = tuners.alphas8 + tuners.alphas9
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -27,14 +27,14 @@ if tuners_tag == 'alphas':
 
 elif tuners_tag == 'adaptiveRho':
     outerIteration = 70
-    innerIteration = 50
-    alpha0s = [1]
+    innerIteration = 50*2
+    alpha0s = [0.005]
     duplicate = ''
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
     # dataFolderPath = 'ADMM-old-adaptive+i50+o70+alpha0=...*16+3+2'
     tuners = alpha0s
-    fp = open(databasePath + dataFolderPath + '/adaptiveAlphaProcess' + str(duplicate) + '.log', mode='w+')
+    fp = open(databasePath + dataFolderPath + '/adaptiveProcess' + str(duplicate) + '.log', mode='w+')
 
 elif tuners_tag == 'inner_iters':
     bestInner = 0
@@ -118,8 +118,8 @@ for i in range(len(tuners)):
         relDuals = []
         for outer_iter in range(1,outerIteration+1):
             logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
-                        + str(tuners[i]) + '_mlem_=False/ADMM_64/'
-            logfile_name = '0_' + str(outer_iter) + '_adaptive_alpha.log'
+                        + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+            logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
             path_txt = logfolder + logfile_name
             theLog = pd.read_table(path_txt)
 
@@ -179,15 +179,12 @@ for i in range(len(tuners)):
 
         plt.figure(3)
         beginning = 0
-        if i < 8:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i], label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i]+'-x', label='dual ' + str(tuners[i]))
-        elif 8 <= i < 16:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i % 8]+'-*', label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i % 8]+'-.', label='dual ' + str(tuners[i]))
+        if i < 2:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], label='primal ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], label='dual ' + str(tuners[i]))
         else:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i % 8]+'.', label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i % 8]+',', label='dual ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], 'b', label='primal ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], 'b',  label='dual ' + str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
         plt.ylabel('residuals')
