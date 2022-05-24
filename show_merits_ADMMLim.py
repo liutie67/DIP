@@ -7,18 +7,18 @@ from show_functions import getDatabasePath, getDataFolderPath, dldir
 import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(5) + '/'
-dataFolderPath = 'ADMM-delayedUpdate+NONadp+i50*2+o70+a=78910(tau100mu2))'
+databasePath = getDatabasePath(7) + '/'
+dataFolderPath = 'ADMM-modifiedNewDual+NONadp+i50*2+o70+a=0.05(tau100mu2)'
 vb = 1
 threads = 128
 
-tuners_tag = 'alphas'  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
+tuners_tag = 'adaptiveRho'  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     outerIteration = 70
     innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = tuners.alphas8 + tuners.alphas9
+    alphas = tuners.alphas7
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -28,7 +28,7 @@ if tuners_tag == 'alphas':
 elif tuners_tag == 'adaptiveRho':
     outerIteration = 70
     innerIteration = 50*2
-    alpha0s = [0.005]
+    alpha0s = [0.05]
     duplicate = ''
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -161,8 +161,8 @@ for i in range(len(tuners)):
             plt.plot(outer_iters[beginning:-1], adaptiveAlphas[beginning:-1], 'x-', label=str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('adaptive alphas')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('adaptive alphas')
 
         plt.figure(2)
         beginning = 0
@@ -174,8 +174,8 @@ for i in range(len(tuners)):
             plt.plot(outer_iters[beginning:-1], adaptiveTaus[beginning:-1], 'x-', label=str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('adaptive taus')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('adaptive taus')
 
         plt.figure(3)
         beginning = 0
@@ -187,8 +187,34 @@ for i in range(len(tuners)):
             plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], 'b',  label='dual ' + str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('residuals')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('both residuals')
+
+        plt.figure(4)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('relative primal residuals')
+
+        plt.figure(5)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('relative dual residuals')
 
         print('No.' + str(i), '  initial alpha =', tuners[i], file=fp)
         print(file=fp)
