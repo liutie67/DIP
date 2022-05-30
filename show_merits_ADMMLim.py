@@ -8,17 +8,23 @@ import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(7) + '/'
-dataFolderPath = 'ADMM-modifiedNewDual+NONadp+i50*2+o70+a=0.05(tau100mu2)'
+dataFolderPath = 'ADMM-NewDual+adpAT+i50*2+o70+a=alphas13(tau100mu1)(replicates*1)'
+REPLICATES = True
+replicates = 1
+ALPHAS = tuners.alphas13
+option = 0
+
 vb = 1
 threads = 128
 
-tuners_tag = 'adaptiveRho'  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
+OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters']
+tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     outerIteration = 70
     innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = tuners.alphas7
+    alphas = ALPHAS
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -28,7 +34,7 @@ if tuners_tag == 'alphas':
 elif tuners_tag == 'adaptiveRho':
     outerIteration = 70
     innerIteration = 50*2
-    alpha0s = [0.05]
+    alpha0s = ALPHAS
     duplicate = ''
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -71,8 +77,12 @@ for i in range(len(tuners)):
     if tuners_tag == 'alphas':
         likelihoods = []
         for outer_iter in range(1, outerIteration+1):
-            logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
-                       + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+            if REPLICATES:
+                replicatesPath = '/replicate_' + str(replicates) + '/ADMMLim/Comparison/ADMMLim'
+            else:
+                replicatesPath = ''
+            logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) \
+                        + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
             logfile_name = '0_' + str(outer_iter) + '.log'
             path_log = logfolder + logfile_name
             theLog = pd.read_table(path_log)
@@ -117,7 +127,11 @@ for i in range(len(tuners)):
         relPrimals = []
         relDuals = []
         for outer_iter in range(1,outerIteration+1):
-            logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
+            if REPLICATES:
+                replicatesPath = '/replicate_' + str(replicates) + '/ADMMLim/Comparison/ADMMLim'
+            else:
+                replicatesPath = ''
+            logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
                         + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
             logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
             path_txt = logfolder + logfile_name
