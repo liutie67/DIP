@@ -19,6 +19,8 @@ from iResults import iResults
 from iResultsReplicates import iResultsReplicates
 from iResultsAlreadyComputed import iResultsAlreadyComputed
 
+from tuners import ADMMoptimizerName
+
 def specialTask(method_special='nested',
                 max_iter=30,
                 replicates_special=1,
@@ -113,9 +115,7 @@ def specialTask(method_special='nested',
     if (config["method"]["grid_search"][0] == 'Gong' or config["method"]["grid_search"][0] == 'nested'):
         task = 'full_reco_with_network'
 
-    elif (config["method"]["grid_search"][0] == 'ADMMLim' or config["method"]["grid_search"][0] == 'MLEM' or config["method"]["grid_search"][0] == 'BSREM' or config["method"]["grid_search"][0] == 'AML'):
-        task = 'castor_reco'
-    elif (config["method"]["grid_search"][0] == 'ADMMLim_adaptiveRho'):
+    elif (config["method"]["grid_search"][0] == ADMMoptimizerName or config["method"]["grid_search"][0] == 'MLEM' or config["method"]["grid_search"][0] == 'BSREM' or config["method"]["grid_search"][0] == 'AML'):
         task = 'castor_reco'
 
     #task = 'full_reco_with_network' # Run Gong or nested ADMM
