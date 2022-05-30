@@ -115,6 +115,8 @@ def specialTask(method_special='nested',
 
     elif (config["method"]["grid_search"][0] == 'ADMMLim' or config["method"]["grid_search"][0] == 'MLEM' or config["method"]["grid_search"][0] == 'BSREM' or config["method"]["grid_search"][0] == 'AML'):
         task = 'castor_reco'
+    elif (config["method"]["grid_search"][0] == 'ADMMLim_adaptiveRho'):
+        task = 'castor_reco'
 
     #task = 'full_reco_with_network' # Run Gong or nested ADMM
     #task = 'castor_reco' # Run CASToR reconstruction with given optimizer
