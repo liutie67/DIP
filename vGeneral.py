@@ -14,7 +14,7 @@ import abc
 
 from torch import fix
 
-from tuners import ADMMoptimizerName
+from tuners import ADMMoptimizerName, mu, tau
 
 class vGeneral(abc.ABC):
     @abc.abstractmethod
@@ -521,8 +521,8 @@ class vGeneral(abc.ABC):
                 rho = 0
             penaltyStrength = ' -pnlt-beta ' + str(rho)
         elif (method == ADMMoptimizerName):
-            mu = 2     # mu = 10 or     mu = 2
-            tau = 100  # tau = 2 or tau_max = 100
+            # mu = 2     # mu = 10 or     mu = 2
+            # tau = 100  # tau = 2 or tau_max = 100
             xi = 1
             opti = ' -opti ' + ADMMoptimizerName + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
             # opti = ' -opti ADMMLim' + ',' + str(self.alpha)
