@@ -13,6 +13,9 @@ import sys
 import abc
 
 from torch import fix
+
+from tuners import ADMMoptimizerName, mu, tau
+
 class vGeneral(abc.ABC):
     @abc.abstractmethod
     def __init__(self,config):
@@ -167,7 +170,7 @@ class vGeneral(abc.ABC):
         if (len(config["method"]['grid_search']) == 1):
             if (config["method"]['grid_search'][0] != "AML"):
                 config.pop("A_AML", None)
-            if (config["method"]['grid_search'][0] != "ADMMLim" and config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong"):
+            if (config["method"]['grid_search'][0] != ADMMoptimizerName and config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong"):
                 config.pop("sub_iter_PLL", None)
                 config.pop("nb_iter_second_admm", None)
                 config.pop("alpha", None)
@@ -183,7 +186,7 @@ class vGeneral(abc.ABC):
             if (config["method"]['grid_search'][0] == 'MLEM' or config["method"]['grid_search'][0] == 'AML'):
                 config.pop("rho", None)
             # Do not use subsets so do not use mlem sequence for ADMM Lim, because of stepsize computation in ADMMLim in CASToR
-            if (config["method"]['grid_search'][0] == "nested" or config["method"]['grid_search'][0] == "ADMMLim"):
+            if (config["method"]['grid_search'][0] == "nested" or config["method"]['grid_search'][0] == ADMMoptimizerName):
                 config["mlem_sequence"]['grid_search'] = [False]
         else:
             if ('results' not in task):
@@ -192,7 +195,7 @@ class vGeneral(abc.ABC):
         if (task == "show_results_replicates"):
             # List of beta values
             if (len(config["method"]['grid_search']) == 1):
-                if (config["method"]['grid_search'][0] == 'ADMMLim'):
+                if (config["method"]['grid_search'][0] == ADMMoptimizerName):
                     self.beta_list = config["alpha"]['grid_search']
                     config["alpha"] = tune.grid_search([0]) # Only put 1 value to avoid running same run several times (only for results with several replicates)
                 else:
@@ -468,7 +471,7 @@ class vGeneral(abc.ABC):
             header_file = ' -df ' + subroot + 'Data/database_v2/' + phantom + '/data' + phantom[-1] + '_' + str(replicates) + '/data' + phantom[-1] + '_' + str(replicates) + '.cdh' # PET data path
         dim = ' -dim ' + PETImage_shape_str
         vox = ' -vox 4,4,4'
-        vb = ' -vb 3'
+        vb = ' -vb 1'
         th = ' -th ' + str(self.nb_threads) # must be set to 1 for ADMMLim, as multithreading does not work for now with ADMMLim optimizer
         proj = ' -proj incrementalSiddon'
         psf = ' -conv gaussian,4,1,3.5::psf'
@@ -517,11 +520,14 @@ class vGeneral(abc.ABC):
             if (i==0): # For first iteration, put rho to zero
                 rho = 0
             penaltyStrength = ' -pnlt-beta ' + str(rho)
-        elif ('ADMMLim' in method):
-            mu = 2      # mu = 10 or     mu = 2
-            tau = 100  # tau = 2 or tau_max = 100
+
+        elif (method == ADMMoptimizerName):
+            # mu = 2     # mu = 10 or     mu = 2
+            # tau = 100  # tau = 2 or tau_max = 100
+            
             xi = 1
-            opti = ' -opti ADMMLim' + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            opti = ' -opti ' + ADMMoptimizerName + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            # opti = ' -opti ADMMLim' + ',' + str(self.alpha)
             pnlt = ' -pnlt ' + penalty
             if penalty == "MRF":
                 pnlt += ':' + self.subroot_data + method + '_MRF.conf'

@@ -6,17 +6,26 @@ import pandas as pd
 from show_functions import getDatabasePath, getDataFolderPath, dldir
 import tuners
 
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(3) + '/'
-dataFolderPath = 'ADMM-old-adapAT+a0=...*(mu=2,tau-rel_max=100)'
 
-tuners_tag = 'alphas'  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+databasePath = getDatabasePath(7) + '/'
+dataFolderPath = 'ADMM-NewDual+NONadp+i50*2+o70+a=alphas0(tau100mu2)(replicates*1)'
+REPLICATES = True
+replicates = 1
+ALPHAS = tuners.alphas0
+option = 1
+
+vb = 1
+threads = 128
+
+OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters']
+tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     outerIteration = 70
-    innerIteration = 50
+    innerIteration = 50*2
     bestAlpha = 0
 
-    alphas = [1]
+    alphas = ALPHAS
 
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
@@ -25,14 +34,14 @@ if tuners_tag == 'alphas':
 
 elif tuners_tag == 'adaptiveRho':
     outerIteration = 70
-    innerIteration = 50
-    alpha0s = [1]
+    innerIteration = 50*2
+    alpha0s = ALPHAS
     duplicate = ''
     inner_iters = range(innerIteration)
     outer_iters = range(outerIteration)
     # dataFolderPath = 'ADMM-old-adaptive+i50+o70+alpha0=...*16+3+2'
     tuners = alpha0s
-    fp = open(databasePath + dataFolderPath + '/adaptiveAlphaProcess' + str(duplicate) + '.log', mode='w+')
+    fp = open(databasePath + dataFolderPath + '/adaptiveProcess' + str(duplicate) + '.log', mode='w+')
 
 elif tuners_tag == 'inner_iters':
     bestInner = 0
@@ -69,15 +78,28 @@ for i in range(len(tuners)):
     if tuners_tag == 'alphas':
         likelihoods = []
         for outer_iter in range(1, outerIteration+1):
-            logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
-                       + str(tuners[i]) + '_mlem_=False/ADMM_64/'
+            if REPLICATES:
+                replicatesPath = '/replicate_' + str(replicates) + '/ADMMLim/Comparison/ADMMLim'
+            else:
+                replicatesPath = ''
+            logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) \
+                        + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
             logfile_name = '0_' + str(outer_iter) + '.log'
             path_log = logfolder + logfile_name
             theLog = pd.read_table(path_log)
-            theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
-            theLikelihoodRowArray = np.array(theLikelihoodRow)
-            theLikelihoodRowString = theLikelihoodRowArray[0, 0]
-            theLikelihoodRowString = theLikelihoodRowString[22:44]
+            if vb == 3:
+                theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
+                theLikelihoodRowArray = np.array(theLikelihoodRow)
+                theLikelihoodRowString = theLikelihoodRowArray[0, 0]
+                theLikelihoodRowString = theLikelihoodRowString[22:44]
+            elif vb == 1:
+                theLikelihoodRow = theLog.loc[[theLog.shape[0] - 11]]
+                theLikelihoodRowArray = np.array(theLikelihoodRow)
+                theLikelihoodRowString = theLikelihoodRowArray[0, 0]
+                theLikelihoodRowString = theLikelihoodRowString[22:44]
+            else:
+                print('************************* verbose(vb) is wrongly set! *************************')
+                break
             if theLikelihoodRowString[0] == '-':
                 theLikelihoodRowString = '0'
             likelihood = float(theLikelihoodRowString)
@@ -85,7 +107,7 @@ for i in range(len(tuners)):
                 likelihoods_alpha.append(likelihood)
             likelihoods.append(likelihood)
 
-        beginning = 0
+        beginning = 1
         if tuners[i] == bestAlpha:
             plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], 'r-x', label=str(alphas[i]))
         elif i < 10:
@@ -105,10 +127,15 @@ for i in range(len(tuners)):
         adaptiveTaus = []
         relPrimals = []
         relDuals = []
+        xis = []
         for outer_iter in range(1,outerIteration+1):
-            logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
-                        + str(tuners[i]) + '_mlem_=False/ADMM_64/'
-            logfile_name = '0_' + str(outer_iter) + '_adaptive_alpha.log'
+            if REPLICATES:
+                replicatesPath = '/replicate_' + str(replicates) + '/ADMMLim/Comparison/ADMMLim'
+            else:
+                replicatesPath = ''
+            logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' \
+                        + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+            logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
             path_txt = logfolder + logfile_name
             theLog = pd.read_table(path_txt)
 
@@ -140,6 +167,10 @@ for i in range(len(tuners)):
             relDual = float(theRelDualRowString)
             relDuals.append(relDual)
 
+            # get xi
+            xis.append(relPrimal/(relDual*2))
+
+
         plt.figure(1)
         beginning = 0
         if i < 10:
@@ -150,8 +181,8 @@ for i in range(len(tuners)):
             plt.plot(outer_iters[beginning:-1], adaptiveAlphas[beginning:-1], 'x-', label=str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('adaptive alphas')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('adaptive alphas')
 
         plt.figure(2)
         beginning = 0
@@ -163,24 +194,60 @@ for i in range(len(tuners)):
             plt.plot(outer_iters[beginning:-1], adaptiveTaus[beginning:-1], 'x-', label=str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('adaptive taus')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('adaptive taus')
 
         plt.figure(3)
         beginning = 0
-        if i < 8:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i], label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i]+'-x', label='dual ' + str(tuners[i]))
-        elif 8 <= i < 16:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i % 8]+'-*', label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i % 8]+'-.', label='dual ' + str(tuners[i]))
+        if i < 2:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], label='primal ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], label='dual ' + str(tuners[i]))
         else:
-            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], colors[i % 8]+'.', label='primal ' + str(tuners[i]))
-            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], colors[i % 8]+',', label='dual ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], 'b', label='primal ' + str(tuners[i]))
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], 'b',  label='dual ' + str(tuners[i]))
         plt.legend(loc='best')
         plt.xlabel('outer iterations')
-        plt.ylabel('residuals')
-        plt.title('The legend shows different initial alpha')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('both residuals')
+
+        plt.figure(4)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], relPrimals[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('relative primal residuals')
+
+        plt.figure(5)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], relDuals[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('relative dual residuals')
+
+        plt.figure(6)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('xis')
 
         print('No.' + str(i), '  initial alpha =', tuners[i], file=fp)
         print(file=fp)
