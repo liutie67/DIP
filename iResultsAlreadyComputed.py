@@ -15,6 +15,7 @@ from skimage.metrics import peak_signal_noise_ratio
 #from vGeneral import vGeneral
 from vDenoising import vDenoising
 
+from tuners import ADMMoptimizerName
 class iResultsAlreadyComputed(vDenoising):
     def __init__(self,config):
         print("__init__")
@@ -24,7 +25,7 @@ class iResultsAlreadyComputed(vDenoising):
         self.initializeGeneralVariables(fixed_config,hyperparameters_config,root)
         vDenoising.initializeSpecific(self,fixed_config,hyperparameters_config,root)
         
-        if (fixed_config["method"] == 'ADMMLim'):
+        if (fixed_config["method"] in ADMMoptimizerName):
             self.total_nb_iter = hyperparameters_config["nb_iter_second_admm"]
             self.beta = hyperparameters_config["alpha"]
         else:
