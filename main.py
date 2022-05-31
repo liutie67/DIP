@@ -115,7 +115,7 @@ def specialTask(method_special='nested',
     if (config["method"]["grid_search"][0] == 'Gong' or config["method"]["grid_search"][0] == 'nested'):
         task = 'full_reco_with_network'
 
-    elif (config["method"]["grid_search"][0] == ADMMoptimizerName or config["method"]["grid_search"][0] == 'MLEM' or config["method"]["grid_search"][0] == 'BSREM' or config["method"]["grid_search"][0] == 'AML'):
+    elif (config["method"]["grid_search"][0] in ADMMoptimizerName or config["method"]["grid_search"][0] == 'MLEM' or config["method"]["grid_search"][0] == 'BSREM' or config["method"]["grid_search"][0] == 'AML'):
         task = 'castor_reco'
 
     #task = 'full_reco_with_network' # Run Gong or nested ADMM

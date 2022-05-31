@@ -19,7 +19,7 @@ class iComparison(vReconstruction):
         if (self.method == 'AML'):
             self.beta = hyperparameters_config["A_AML"]
             self.A_AML = hyperparameters_config["A_AML"]
-        elif (self.method == ADMMoptimizerName):
+        elif (self.method in ADMMoptimizerName):
             self.beta = hyperparameters_config["alpha"]
         elif (self.method == 'BSREM'):
             self.beta = self.rho
@@ -29,7 +29,7 @@ class iComparison(vReconstruction):
                                                               self.post_smoothing) + self.castor_opti_and_penalty(self.method, self.penalty, self.rho)
         print("commmmmmmmmmmm")
         print(castor_command_line)
-        if (self.method == ADMMoptimizerName):
+        if (self.method in ADMMoptimizerName):
             self.ADMMLim(fixed_config, hyperparameters_config)
         else:
             it = ' -it ' + str(self.max_iter) + ':' + str(fixed_config["nb_subsets"])
@@ -47,7 +47,7 @@ class iComparison(vReconstruction):
             os.system(castor_command_line + it + output_path + initialimage)
 
         # NNEPPS
-        if (self.method == ADMMoptimizerName):
+        if (self.method in ADMMoptimizerName):
             max_it = hyperparameters_config["nb_iter_second_admm"]
         else:
             max_it = fixed_config["max_iter"]
@@ -164,7 +164,7 @@ class iComparison(vReconstruction):
     def NNEPPS_function(self, fixed_config, hyperparameters_config, it):
         executable = 'removeNegativeValues.exe'
 
-        if (self.method == ADMMoptimizerName):
+        if (self.method in ADMMoptimizerName):
             i = 0
             subdir = 'ADMM' + '_' + str(fixed_config["nb_threads"])
             input_without_extension = self.subroot + 'Comparison/' + self.method + '/' + self.suffix + '/' + subdir + '/' + format(

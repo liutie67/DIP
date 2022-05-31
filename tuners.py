@@ -1,4 +1,4 @@
-ADMMoptimizerName = "ADMMLim_old"
+ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau']
 mu = 2        # mu = 10 or     mu = 2
 tau = 100     # tau = 2 or tau_max = 100
 
