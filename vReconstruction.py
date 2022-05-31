@@ -12,6 +12,8 @@ import numpy as np
 # Local files to import
 from vGeneral import vGeneral
 
+from tuners import ADMMoptimizerName
+
 import abc
 class vReconstruction(vGeneral):
     @abc.abstractmethod
@@ -30,7 +32,7 @@ class vReconstruction(vGeneral):
             self.rho = hyperparameters_config["rho"]
         else:
             self.rho = 0
-        if (fixed_config["method"] == "ADMMLim" or fixed_config["method"] == "nested" or fixed_config["method"] == "Gong"):
+        if (fixed_config["method"] == ADMMoptimizerName or fixed_config["method"] == "nested" or fixed_config["method"] == "Gong"):
             self.alpha = hyperparameters_config["alpha"] # Not useful for Gong
             self.sub_iter_PLL = hyperparameters_config["sub_iter_PLL"]
         self.image_init_path_without_extension = fixed_config["image_init_path_without_extension"]

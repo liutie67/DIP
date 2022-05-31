@@ -26,8 +26,7 @@ class iComparison(vReconstruction):
         # castor-recon command line
         castor_command_line = self.castor_common_command_line(self.subroot_data, self.PETImage_shape_str, self.phantom,
                                                               self.replicate,
-                                                              self.post_smoothing) + self.castor_opti_and_penalty(
-            self.method, self.penalty, self.rho)
+                                                              self.post_smoothing) + self.castor_opti_and_penalty(self.method, self.penalty, self.rho)
         print("commmmmmmmmmmm")
         print(castor_command_line)
         if (self.method == ADMMoptimizerName):

@@ -6,13 +6,14 @@ import pandas as pd
 from show_functions import getDatabasePath, getDataFolderPath, dldir
 import tuners
 
+
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(7) + '/'
-dataFolderPath = 'ADMM-NewDual+adpAT+i50*2+o70+a=alphas13(tau100mu1)(replicates*1)'
+dataFolderPath = 'ADMM-NewDual+NONadp+i50*2+o70+a=alphas0(tau100mu2)(replicates*1)'
 REPLICATES = True
 replicates = 1
-ALPHAS = tuners.alphas13
-option = 0
+ALPHAS = tuners.alphas0
+option = 1
 
 vb = 1
 threads = 128
@@ -126,6 +127,7 @@ for i in range(len(tuners)):
         adaptiveTaus = []
         relPrimals = []
         relDuals = []
+        xis = []
         for outer_iter in range(1,outerIteration+1):
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/ADMMLim/Comparison/ADMMLim'
@@ -164,6 +166,10 @@ for i in range(len(tuners)):
             theRelDualRowString = theRelDualRowArray[0, 0]
             relDual = float(theRelDualRowString)
             relDuals.append(relDual)
+
+            # get xi
+            xis.append(relPrimal/(relDual*2))
+
 
         plt.figure(1)
         beginning = 0
@@ -229,6 +235,19 @@ for i in range(len(tuners)):
         plt.xlabel('outer iterations')
         plt.ylabel('The legend shows different initial alpha')
         plt.title('relative dual residuals')
+
+        plt.figure(6)
+        beginning = 0
+        if i < 10:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], label=str(tuners[i]))
+        elif 10 <= i < 20:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], '.-', label=str(tuners[i]))
+        else:
+            plt.plot(outer_iters[beginning:-1], xis[beginning:-1], 'x-', label=str(tuners[i]))
+        plt.legend(loc='best')
+        plt.xlabel('outer iterations')
+        plt.ylabel('The legend shows different initial alpha')
+        plt.title('xis')
 
         print('No.' + str(i), '  initial alpha =', tuners[i], file=fp)
         print(file=fp)
