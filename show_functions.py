@@ -91,16 +91,16 @@ def dldir(path):
 
 
 def moveData(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
-    src = baseroot + '/DIP/data/Algo/image0/*'
+    src = baseroot + '/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/' + str(copies) + '/'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
-    os.system('rm -fr ' + baseroot + '/DIP/data/Algo/debug/*')
-    os.system('rm -fr ' + baseroot + '/DIP/data/Algo/metrics/*')
+    os.system('rm -fr ' + baseroot + '/data/Algo/debug/*')
+    os.system('rm -fr ' + baseroot + '/data/Algo/metrics/*')
 
 
 def moveRuns(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
-    src = baseroot + '/DIP/runs/*'
+    src = baseroot + '/runs/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/tb/tb' + str(copies) + '/'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
