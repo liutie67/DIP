@@ -1,6 +1,4 @@
 ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau']
-mu = 2        # mu = 10 or     mu = 2
-tau = 100     # tau = 2 or tau_max = 100
 
 alphas0 = [0.0001, 0.001, 0.005, 0.01, 0.05, 0.1, 0.6, 0.9, 1]
 alphas1 = [0.0001, 0.001, 0.01, 0.1, 0.3, 0.6, 0.9, 1]
