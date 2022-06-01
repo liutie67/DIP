@@ -132,5 +132,64 @@ def moveALL():
 def getDatabasePath(i):
     return '/home/liutie/Documents/outputDatabase' + str(i)
 
+
 def getDataFolderPath(i,folder):
     return getDatabasePath(i) + '/' + folder
+
+
+def computeThose4(f):
+    f = fijii_np(f, shape=getShape(), type='<d')
+    f_metric = find_nan(f)
+    bkg_ROI = getPhantomROI()
+    bkg_ROI_act = f_metric[bkg_ROI == 1]
+    # IR
+    if np.mean(bkg_ROI_act) != 0:
+        IR_bkg_recon = np.std(bkg_ROI_act) / np.mean(bkg_ROI_act)
+    else:
+        IR_bkg_recon = 1e10
+
+    # MSE
+    MSE_recon = np.mean((getGT() * getPhantomROI() - f_metric * getPhantomROI()) ** 2)
+
+    # Mean Concentration Recovery coefficient (CRCmean) in hot cylinder calculation (-c 50. 10. 0. 20. 4. 400)
+    hot_ROI = fijii_np(subroot + '/Data/database_v2/' + image + '/' + "tumor_mask" + image[-1] + '.raw',
+                       shape=getShape())
+    hot_ROI_act = f_metric[hot_ROI == 1]
+
+    # CRC hot
+    # CRC_hot_recon.append(np.mean(hot_ROI_act) / 400.)
+    CRC_hot_recon = np.abs(np.mean(hot_ROI_act) - 400.)
+
+    cold_ROI = fijii_np(subroot + '/Data/database_v2/' + image + '/' + "cold_mask" + image[-1] + '.raw',
+                        shape=getShape())
+    cold_ROI_act = f_metric[cold_ROI == 1]
+
+    # MA cold
+    MA_cold_recon = np.abs(np.mean(cold_ROI_act))
+
+    return IR_bkg_recon, MSE_recon, CRC_hot_recon, MA_cold_recon
+
+def PLOT(X,
+         Y,
+         tuner,
+         nbTuner,
+         figNum=1,
+         Xlabel='X',
+         Ylabel='Y',
+         Title='',
+         beginning=1,
+         bestValue=-1):
+    plt.figure(figNum)
+    if tuner == bestValue:
+        plt.plot(X[beginning:-1], Y[beginning:-1], 'r-x', label=str(tuner))
+    elif nbTuner < 10:
+        plt.plot(X[beginning:-1], Y[beginning:-1], label=str(tuner))
+    elif 10 <= nbTuner < 20:
+        plt.plot(X[beginning:-1], Y[beginning:-1], '.-', label=str(tuner))
+    else:
+        plt.plot(X[beginning:-1], Y[beginning:-1], 'x-', label=str(tuner))
+    plt.legend(loc='best')
+    plt.xlabel(Xlabel)
+    plt.ylabel(Ylabel)
+    plt.title(Title)
+
