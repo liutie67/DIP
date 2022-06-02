@@ -9,22 +9,26 @@ import tuners
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 databasePath = getDatabasePath(9) + '/'
-dataFolderPath = 'ADMM-NewDual+adpAT+i50+o70+a=alphas0(tau100mu1)(replicates*1)'
+dataFolderPath = 'ADMM-NewDual+adpA+i50+o70+a=alphas0(tau100mu1)(replicates*5)'
+whichADMMoptimizer = tuners.ADMMoptimizerName[1]
+
 REPLICATES = True
 replicates = 1
 ALPHAS = tuners.alphas0
-whichADMMoptimizer = tuners.ADMMoptimizerName[2]
+
+outerIteration = 70
+innerIteration = 50
 
 vb = 1
 threads = 128
 
-option = 1
+option = 0
 
 OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters']
 tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
-    outerIteration = 70
-    innerIteration = 50
+    # outerIteration = 1000
+    # innerIteration = 50
     bestAlpha = 0
 
     alphas = ALPHAS
@@ -35,8 +39,8 @@ if tuners_tag == 'alphas':
     tuners = alphas
 
 elif tuners_tag == 'adaptiveRho':
-    outerIteration = 70
-    innerIteration = 50
+    # outerIteration = 1000
+    # innerIteration = 50
     alpha0s = ALPHAS
     duplicate = ''
     if REPLICATES:
@@ -112,10 +116,13 @@ for i in range(len(tuners)):
                 likelihoods_alpha.append(likelihood)
             likelihoods.append(likelihood)
 
-        PLOT(outer_iters, likelihoods, tuners[i], i, figNum=1,
+        PLOT(outer_iters, likelihoods, tuners, i, figNum=1,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Likelihood')
+             Title='Likelihood',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
         IR_bkgs = []
         MSEs = []
@@ -137,25 +144,37 @@ for i in range(len(tuners)):
             CRC_hots.append(CRC)
             MA_colds.append(MA)
 
-        PLOT(outer_iters, IR_bkgs, tuners[i], i, figNum=2,
+        PLOT(outer_iters, IR_bkgs, tuners, i, figNum=2,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Image Roughness in the background')
+             Title='Image Roughness in the background',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, MSEs, tuners[i], i, figNum=3,
+        PLOT(outer_iters, MSEs, tuners, i, figNum=3,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Mean Square Error')
+             Title='Mean Square Error',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, CRC_hots, tuners[i], i, figNum=4,
+        PLOT(outer_iters, CRC_hots, tuners, i, figNum=4,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='CRC hot')
+             Title='CRC hot',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, MA_colds, tuners[i], i, figNum=5,
+        PLOT(outer_iters, MA_colds, tuners, i, figNum=5,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='MA cold')
+             Title='MA cold',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
     # adaptive alphas
     elif tuners_tag == 'adaptiveRho':
@@ -207,36 +226,55 @@ for i in range(len(tuners)):
             # get xi
             xis.append(relPrimal/(relDual*2))
 
-        PLOT(outer_iters, adaptiveAlphas, tuners[i], i, figNum=1,
+        PLOT(outer_iters, adaptiveAlphas, tuners, i, figNum=1,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Adaptive alphas')
+             Title='Adaptive alphas',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, adaptiveTaus, tuners[i], i, figNum=2,
+        PLOT(outer_iters, adaptiveTaus, tuners, i, figNum=2,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Adaptive taus')
+             Title='Adaptive taus',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, relPrimals, tuners[i], i, figNum=3,
+        PLOT(outer_iters, relPrimals, tuners, i, figNum=3,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Relative primal residuals')
+             Title='Relative primal residuals',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, relDuals, tuners[i], i, figNum=4,
+        PLOT(outer_iters, relDuals, tuners, i, figNum=4,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Relative dual residuals')
+             Title='Relative dual residuals',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, xis, tuners[i], i, figNum=5,
+        PLOT(outer_iters, xis, tuners, i, figNum=5,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Xis')
+             Title='Xis',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
 
         print('No.' + str(i), '  initial alpha =', tuners[i], file=fp)
         print(file=fp)
         for k in range(1, len(adaptiveAlphas)+1):
             if k < 10:
-                print('             --( ' + str(k) + ')-->', adaptiveAlphas[k-1], file=fp)
+                print('             --(   ' + str(k) + ')-->', adaptiveAlphas[k-1], file=fp)
+            elif k < 100:
+                print('             --(  ' + str(k) + ')-->', adaptiveAlphas[k - 1], file=fp)
+            elif k < 1000:
+                print('             --( ' + str(k) + ')-->', adaptiveAlphas[k - 1], file=fp)
             else:
                 print('             --(' + str(k) + ')-->', adaptiveAlphas[k-1], file=fp)
         print(file=fp)
@@ -315,4 +353,4 @@ elif tuners_tag == 'alphas':
     plt.xlabel('alpha')
     plt.title('likelihood')
 
-plt.show()
+# plt.show()

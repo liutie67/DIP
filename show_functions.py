@@ -171,25 +171,33 @@ def computeThose4(f):
 
 def PLOT(X,
          Y,
-         tuner,
+         tuners,
          nbTuner,
          figNum=1,
          Xlabel='X',
          Ylabel='Y',
          Title='',
          beginning=1,
-         bestValue=-1):
+         bestValue=-1,
+         showLess=[0,1],
+         replicate=0,
+         imagePath='/home/liutie/Pictures',
+         whichOptimizer=''):
     plt.figure(figNum)
-    if tuner == bestValue:
-        plt.plot(X[beginning:-1], Y[beginning:-1], 'r-x', label=str(tuner))
+    if tuners[nbTuner] == bestValue:
+        plt.plot(X[beginning:-1], Y[beginning:-1], 'r-x', label=str(tuners[nbTuner]))
+    elif nbTuner in showLess:
+        plt.plot(X[beginning:-1], Y[beginning:-1], '--',label=str(tuners[nbTuner]))
     elif nbTuner < 10:
-        plt.plot(X[beginning:-1], Y[beginning:-1], label=str(tuner))
+        plt.plot(X[beginning:-1], Y[beginning:-1], label=str(tuners[nbTuner]))
     elif 10 <= nbTuner < 20:
-        plt.plot(X[beginning:-1], Y[beginning:-1], '.-', label=str(tuner))
+        plt.plot(X[beginning:-1], Y[beginning:-1], '.-', label=str(tuners[nbTuner]))
     else:
-        plt.plot(X[beginning:-1], Y[beginning:-1], 'x-', label=str(tuner))
+        plt.plot(X[beginning:-1], Y[beginning:-1], 'x-', label=str(tuners[nbTuner]))
     plt.legend(loc='best')
     plt.xlabel(Xlabel)
     plt.ylabel(Ylabel)
-    plt.title(Title)
+    plt.title('(' + whichOptimizer + ')(replicate ' + str(replicate) + ') ' + Title)
+    if replicate > 0 and tuners[-1]==tuners[nbTuner]:
+        plt.savefig(imagePath + '/(' + whichOptimizer + ')' + Title + '_rep' + str(replicate) + '.png')
 
