@@ -110,7 +110,8 @@ class iComparison(vReconstruction):
             # Initialize variables for command line
             if (k == k_init + 1):
                 if (i == 0):  # choose initial image for CASToR reconstruction
-                    initialimage = ' -img ' + self.subroot_data + 'Data/initialization/' + self.image_init_path_without_extension + '.hdr' if self.image_init_path_without_extension != "" else ''  # initializing CASToR PLL reconstruction with image_init or with CASToR default values
+                    initialimage = ' -img ' + '/home/liutie/Documents/outputDatabase10/test17t1-1/replicate_1/ADMMLim/Comparison/ADMMLim/config_rho=0_sub_i=10_alpha=0.005_mlem_=False/ADMM_1/0_10_it10.hdr'
+                    #+ self.subroot_data + 'Data/initialization/' + self.image_init_path_without_extension + '.hdr' if self.image_init_path_without_extension != "" else ''  # initializing CASToR PLL reconstruction with image_init or with CASToR default values
             else:
                 initialimage = ' -img ' + subroot_output_path + '/' + subdir + '/' + format(i) + '_' + format(
                     k) + '_it' + str(hyperparameters_config["sub_iter_PLL"]) + '.hdr'
@@ -145,7 +146,7 @@ class iComparison(vReconstruction):
             print(x_reconstruction_command_line)
             self.compute_x_v_u_ADMM(x_reconstruction_command_line, full_output_path_k_next, subdir, i, k, self.phantom,
                                     subroot_output_path, self.subroot_data)
-
+            '''
             # -- AdaptiveRho ---- AdaptiveRho ---- AdaptiveRho ---- AdaptiveRho ---- AdaptiveRho ---- AdaptiveRho --
             path_adaptive = subroot_output_path + '/' + subdir + '/' + format(i) + '_' + format(
                 k+1) + '_adaptive.log'
@@ -159,7 +160,7 @@ class iComparison(vReconstruction):
             castor_command_line_x = self.castor_common_command_line(self.subroot_data, self.PETImage_shape_str,
                                                                     self.phantom, self.replicate,
                                                                     self.post_smoothing)
-
+            '''
 
     def NNEPPS_function(self, fixed_config, hyperparameters_config, it):
         executable = 'removeNegativeValues.exe'
