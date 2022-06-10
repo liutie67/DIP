@@ -534,7 +534,10 @@ class vGeneral(abc.ABC):
                 mu = 1
                 tau = 100
             xi = 1
-            opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            if method != ADMMoptimizerName[3]:
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            else:
+                opti = ' -opti ' + method + ',' + str(self.alpha)
             # opti = ' -opti ADMMLim' + ',' + str(self.alpha)
             pnlt = ' -pnlt ' + penalty
             if penalty == "MRF":
