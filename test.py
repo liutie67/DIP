@@ -4,3 +4,73 @@ import pandas as pd
 import numpy as np
 import datetime
 from show_functions import moveALL
+import matplotlib.pyplot as plt
+
+def fijii_np(path,shape,type='<d'):
+    """"Transforming raw data to numpy array"""
+    file_path=(path)
+    dtype = np.dtype(type)
+    fid = open(file_path, 'rb')
+    data = np.fromfile(fid,dtype)
+    image = data.reshape(shape)
+    return image
+
+img1 = '/home/liutie/Documents/outputDatabase#/2022-6-10+13-32-16/replicate_1/ADMMLim/Comparison/ADMMLim/config_rho=0_sub_i=100_alpha=0.005_mlem_=False/ADMM_1/0_1_it100.img'
+img2 = '/home/liutie/Documents/outputDatabase#/2022-6-10+13-32-39/replicate_1/ADMMLim/Comparison/ADMMLim/config_rho=0_sub_i=100_alpha=0.005_mlem_=False/ADMM_2/0_1_it100.img'
+
+root = 'data/Algo/'
+PETImage_shape = (112,112,1)
+
+img1_np = fijii_np(img1, shape=(PETImage_shape))
+print("min 1 = " ,np.min(img1_np))
+print("mean 1 = " ,np.mean(img1_np))
+print("max 1 = " ,np.max(img1_np))
+img2_np = fijii_np(img2, shape=(PETImage_shape))
+print("")
+print("min 2 = " ,np.min(img2_np))
+print("mean 2 = " ,np.mean(img2_np))
+print("max 2 = " ,np.max(img2_np))
+
+plt.figure()
+#plt.imshow(np.abs(img1_np - img2_np), cmap='gray_r')
+plt.imshow(img1_np - img2_np, cmap='gray_r')
+plt.title('absolute difference between img1 and img2')
+plt.colorbar()
+plt.savefig(root+'diff_img.png')
+
+img_rel = img1_np / img2_np
+plt.figure()
+plt.imshow(img_rel, cmap='gray_r')
+print('maximum of relative difference: ', np.abs(np.max(img_rel)))
+print('minimum of relative difference: ', np.abs(np.min(img_rel)))
+
+'''
+for i in range(img1_np.shape[0]):
+    for j in range(img1_np.shape[1]):
+        if (np.abs(img1_np[i,j] / img2_np[i,j] > 100)):
+            print("img1_np = ",img1_np[i,j])
+            print("img2_np = ",img2_np[i,j])
+'''
+plt.title('relative difference between img1 and img2')
+plt.colorbar()
+plt.savefig(root+'relative_diff_img.png')
+
+MSE_normed = np.linalg.norm(img1_np - img2_np) / (PETImage_shape[0]*PETImage_shape[1]*PETImage_shape[2])
+print("MSE : ",MSE_normed)
+print("Numerical error below threshold : ",MSE_normed < 1e-5)
+
+plt.figure()
+#plt.imshow(np.abs(img1_np), cmap='gray_r')
+plt.imshow(img1_np, cmap='gray_r')
+plt.title('img1')
+plt.colorbar()
+plt.savefig(root+'img1.png')
+
+plt.figure()
+#plt.imshow(np.abs(img2_np), cmap='gray_r')
+plt.imshow(img2_np, cmap='gray_r')
+plt.title('img2')
+plt.colorbar()
+plt.savefig(root+'img2.png')
+
+plt.show()
