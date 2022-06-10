@@ -116,15 +116,40 @@ def initialALL():
 def moveALL():
     time = datetime.datetime.now()
 
+    if time.month < 10:
+        s_month = '0' + str(time.month)
+    else:
+        s_month = str(time.month)
+
+    if time.day < 10:
+        s_day = '0' + str(time.day)
+    else:
+        s_day = str(time.day)
+
+    if time.hour < 10:
+        s_hour = '0' + str(time.hour)
+    else:
+        s_hour = str(time.hour)
+
+    if time.minute < 10:
+        s_minute = '0' + str(time.minute)
+    else:
+        s_minute = str(time.minute)
+
+    if time.second < 10:
+        s_second = '0' + str(time.second)
+    else:
+        s_second = str(time.second)
+
     src = baseroot + '/data/Algo/image0/*'
-    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
-          + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second)
+    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + s_month + '-' \
+          + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
     src = baseroot + '/runs/*'
-    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + str(time.month) + '-' \
-          + str(time.day) + '+' + str(time.hour) + '-' + str(time.minute) + '-' + str(time.second) + '/tb'
+    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + s_month + '-' \
+          + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second + '/tb'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
