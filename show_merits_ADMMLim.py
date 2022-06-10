@@ -8,19 +8,20 @@ import tuners
 
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(9) + '/'
-dataFolderPath = 'ADMM-NewDual+adpA+i50+o70+a=alphas0(tau100mu1)(replicates*5)'
-whichADMMoptimizer = tuners.ADMMoptimizerName[1]
+databasePath = getDatabasePath(10) + '/'
+dataFolderPath = 'test17t3-1'
+whichADMMoptimizer = tuners.ADMMoptimizerName[3]
+NEWoptimzer = False
 
 REPLICATES = True
 replicates = 1
-ALPHAS = tuners.alphas0
+ALPHAS = [0.005]
 
-outerIteration = 70
-innerIteration = 50
+outerIteration = 10
+innerIteration = 10
 
 vb = 1
-threads = 128
+threads = 3
 
 option = 0
 
@@ -224,7 +225,7 @@ for i in range(len(tuners)):
             relDuals.append(relDual)
 
             # get xi
-            xis.append(relPrimal/(relDual*2))
+            # xis.append(relPrimal/(relDual*2))
 
         PLOT(outer_iters, adaptiveAlphas, tuners, i, figNum=1,
              Xlabel='Outer iteration',
@@ -257,7 +258,7 @@ for i in range(len(tuners)):
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
-
+        '''
         PLOT(outer_iters, xis, tuners, i, figNum=5,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
@@ -265,18 +266,18 @@ for i in range(len(tuners)):
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
-
-        print('No.' + str(i), '  initial alpha =', tuners[i], file=fp)
+        '''
+        print('No.' + str(i), '  initial alpha =', tuners[i], '\trel primal', '\trel dual', file=fp)
         print(file=fp)
         for k in range(1, len(adaptiveAlphas)+1):
             if k < 10:
-                print('             --(   ' + str(k) + ')-->', adaptiveAlphas[k-1], file=fp)
+                print('           --(   ' + str(k) + ')-->', adaptiveAlphas[k-1], '\t', relPrimals[k-1], '\t', relDuals[k-1], file=fp)
             elif k < 100:
-                print('             --(  ' + str(k) + ')-->', adaptiveAlphas[k - 1], file=fp)
+                print('           --(  ' + str(k) + ')-->', adaptiveAlphas[k-1], '\t', relPrimals[k-1], '\t', relDuals[k-1], file=fp)
             elif k < 1000:
-                print('             --( ' + str(k) + ')-->', adaptiveAlphas[k - 1], file=fp)
+                print('           --( ' + str(k) + ')-->', adaptiveAlphas[k-1], '\t', relPrimals[k-1], '\t', relDuals[k-1], file=fp)
             else:
-                print('             --(' + str(k) + ')-->', adaptiveAlphas[k-1], file=fp)
+                print('           --(' + str(k) + ')-->', adaptiveAlphas[k-1], '\t', relPrimals[k-1], '\t', relDuals[k-1], file=fp)
         print(file=fp)
         print(file=fp)
 
@@ -353,4 +354,4 @@ elif tuners_tag == 'alphas':
     plt.xlabel('alpha')
     plt.title('likelihood')
 
-# plt.show()
+plt.show()
