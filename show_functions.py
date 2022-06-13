@@ -113,7 +113,7 @@ def initialALL():
     os.system('rm -rf ' + baseroot + '/runs/*')
 
 
-def moveALL():
+def moveALL(folderName=''):
     time = datetime.datetime.now()
 
     if time.month < 10:
@@ -141,15 +141,16 @@ def moveALL():
     else:
         s_second = str(time.second)
 
+    if folderName == '':
+        folderName = str(time.year) + '-' + s_month + '-' + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second
+
     src = baseroot + '/data/Algo/image0/*'
-    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + s_month + '-' \
-          + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second
+    dtn = '/home/liutie/Documents/outputDatabase#/' + folderName
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
     src = baseroot + '/runs/*'
-    dtn = '/home/liutie/Documents/outputDatabase#/' + str(time.year) + '-' + s_month + '-' \
-          + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second + '/tb'
+    dtn = '/home/liutie/Documents/outputDatabase#/' + folderName + '/tb'
     mkdir(dtn)
     os.system('mv -u ' + src + ' ' + dtn)
 
