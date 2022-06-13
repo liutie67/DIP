@@ -147,12 +147,12 @@ def moveALL(folderName=''):
     src = baseroot + '/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + folderName
     mkdir(dtn)
-    os.system('mv -u ' + src + ' ' + dtn)
+    os.system('mv -b ' + src + ' ' + dtn)
 
     src = baseroot + '/runs/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + folderName + '/tb'
     mkdir(dtn)
-    os.system('mv -u ' + src + ' ' + dtn)
+    os.system('mv -b ' + src + ' ' + dtn)
 
 
 def getDatabasePath(i):
