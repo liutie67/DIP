@@ -113,7 +113,7 @@ def initialALL():
     os.system('rm -rf ' + baseroot + '/runs/*')
 
 
-def moveALL(folderName=''):
+def moveALL(folderName='', model='solo'):
     time = datetime.datetime.now()
 
     if time.month < 10:
@@ -141,8 +141,8 @@ def moveALL(folderName=''):
     else:
         s_second = str(time.second)
 
-    if folderName == '':
-        folderName = str(time.year) + '-' + s_month + '-' + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second
+    # if folderName == '':
+    folderName = str(time.year) + '-' + s_month + '-' + s_day + '+' + s_hour + '-' + s_minute + '-' + s_second + folderName
 
     src = baseroot + '/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase#/' + folderName
@@ -205,7 +205,7 @@ def PLOT(X,
          Title='',
          beginning=1,
          bestValue=-1,
-         showLess=[0,1],
+         showLess=[],
          replicate=0,
          imagePath='/home/liutie/Pictures',
          whichOptimizer=''):
