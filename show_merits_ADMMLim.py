@@ -6,38 +6,14 @@ import pandas as pd
 from show_functions import getDatabasePath, getDataFolderPath, dldir, computeThose4, PLOT, calculateDiffCurve
 import tuners
 
+from panel_show_merits_ADMMLim import colors, outputDatabaseNb, dataFolderPath, whichADMMoptimizer, REPLICATES
+from panel_show_merits_ADMMLim import replicates, ALPHAS, outerIteration, innerIteration
+from panel_show_merits_ADMMLim import vb, threads, SHOW, tuners_tag
+from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
 
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-outputDatabaseNb = 11
+
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
-dataFolderPath = '(threadSafe)ADMM-NewDual+adpAT+i100(*2)+o100+a=alpha0(tau100mu1)(replicates*1)(t128)'
-whichADMMoptimizer = tuners.ADMMoptimizerName[2]
 
-REPLICATES = True
-replicates = 1
-ALPHAS = tuners.alphas0
-
-outerIteration = 100
-innerIteration = 100
-
-vb = 1
-threads = 128
-SHOW = False
-
-option = 4
-
-# --------------------------------------
-# calculate difference curves parameters
-inners = list(range(innerIteration))
-outers = list(range(1,100))
-alpha = 0.005
-MODEL = 'max'
-TOGETHER = False
-# --------------------------------------
-
-#            0            1              2              3                 4
-OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters', 'calculateDiffCurve']
-tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     # outerIteration = 1000
     # innerIteration = 50
