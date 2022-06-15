@@ -537,6 +537,10 @@ class vGeneral(abc.ABC):
                 mu = 10
                 tau = 100
                 method = ADMMoptimizerName[2]
+            elif method == ADMMoptimizerName[4]:
+                mu = 50
+                tau = 100
+                method = ADMMoptimizerName[2]
             xi = 1
             opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
             # opti = ' -opti ADMMLim' + ',' + str(self.alpha)
