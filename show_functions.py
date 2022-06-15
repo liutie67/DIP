@@ -6,7 +6,6 @@ import datetime
 
 subroot = os.getcwd() + '/data/Algo'
 baseroot = os.getcwd()
-image = 'image0'
 
 def read_input_dim(file_path):
     # Read CASToR header file to retrieve image dimension """
@@ -25,10 +24,12 @@ def read_input_dim(file_path):
     # print('image shape :', PETImage_shape)
     return PETImage_shape_str
 
+
 def input_dim_str_to_list(PETImage_shape_str):
     return [int(e.strip()) for e in PETImage_shape_str.split(',')]  # [:-1]
 
-def getShape():
+
+def getShape(image='image0'):
     PETimage_shape_str = read_input_dim(subroot + '/Data/database_v2/' + image + '/' + image + '.hdr')
     PETimage_shape = input_dim_str_to_list(PETimage_shape_str)
 
@@ -46,8 +47,6 @@ def fijii_np(path, shape=getShape(), type='<f'):
     return image
 
 
-
-
 def find_nan(image):
     """ find NaN values on the image"""
     idx = np.argwhere(np.isnan(image))
@@ -58,14 +57,14 @@ def find_nan(image):
     return image
 
 
-def getGT():
+def getGT(image='image0'):
     # load ground truth image
     image_path = subroot + '/Data/database_v2/' + image + '/' + image + '.raw'
     image_gt = fijii_np(image_path, shape=getShape(), type='<f')
 
     return image_gt
 
-def getPhantomROI():
+def getPhantomROI(image='image0'):
     # select only phantom ROI, not whole reconstructed image
     path_phantom_ROI = subroot + '/Data/database_v2/' + image + '/' + 'background_mask' + image[-1] + '.raw'
     my_file = Path(path_phantom_ROI)
@@ -163,7 +162,7 @@ def getDataFolderPath(i,folder):
     return getDatabasePath(i) + '/' + folder
 
 
-def computeThose4(f):
+def computeThose4(f, image='image0'):
     f = fijii_np(f, shape=getShape(), type='<d')
     f_metric = find_nan(f)
     bkg_ROI = getPhantomROI()
@@ -203,27 +202,81 @@ def PLOT(X,
          Xlabel='X',
          Ylabel='Y',
          Title='',
-         beginning=1,
+         beginning=0,
          bestValue=-1,
          showLess=[],
          replicate=0,
          imagePath='/home/liutie/Pictures',
-         whichOptimizer=''):
+         whichOptimizer='',
+         Together=True):
     plt.figure(figNum)
+    end = len(X)
     if tuners[nbTuner] == bestValue:
-        plt.plot(X[beginning:-1], Y[beginning:-1], 'r-x', label=str(tuners[nbTuner]))
+        plt.plot(X[beginning:end], Y[beginning:end], 'r-x', label=str(tuners[nbTuner]))
     elif nbTuner in showLess:
-        plt.plot(X[beginning:-1], Y[beginning:-1], '--',label=str(tuners[nbTuner]))
+        plt.plot(X[beginning:end], Y[beginning:end], '--',label=str(tuners[nbTuner]))
     elif nbTuner < 10:
-        plt.plot(X[beginning:-1], Y[beginning:-1], label=str(tuners[nbTuner]))
+        plt.plot(X[beginning:end], Y[beginning:end], label=str(tuners[nbTuner]))
     elif 10 <= nbTuner < 20:
-        plt.plot(X[beginning:-1], Y[beginning:-1], '.-', label=str(tuners[nbTuner]))
+        plt.plot(X[beginning:end], Y[beginning:end], '.-', label=str(tuners[nbTuner]))
     else:
-        plt.plot(X[beginning:-1], Y[beginning:-1], 'x-', label=str(tuners[nbTuner]))
+        plt.plot(X[beginning:end], Y[beginning:end], 'x-', label=str(tuners[nbTuner]))
     plt.legend(loc='best')
     plt.xlabel(Xlabel)
     plt.ylabel(Ylabel)
     plt.title('(' + whichOptimizer + ')(replicate ' + str(replicate) + ') ' + Title)
-    if replicate > 0 and tuners[-1]==tuners[nbTuner]:
-        plt.savefig(imagePath + '/(' + whichOptimizer + ')' + Title + '_rep' + str(replicate) + '.png')
+    if Together:
+        if replicate > 0 and tuners[-1] == tuners[nbTuner]:
+            mkdir(imagePath)
+            plt.savefig(imagePath + '/(' + whichOptimizer + ')' + Title + '_rep' + str(replicate) + '.png')
+    elif not Together:
+        mkdir(imagePath)
+        plt.savefig(imagePath + '/(' + whichOptimizer + ')' + Title + '_rep' + str(replicate) + ' - ' + str(tuners[nbTuner]) + '.png')
+
+
+def getImagePath(outputDatabaseNb, folder, optimizer, innerIteration, alpha, outerNb, innerNb, rho=0, threads = 128, REPLICATES=True, replicates=1, total=0, MLEM='False'):
+    if REPLICATES:
+        replicatesPath = '/replicate_' + str(replicates) + '/' + optimizer + '/Comparison/' \
+                         + optimizer
+    else:
+        replicatesPath = ''
+
+    imagePath = getDataFolderPath(outputDatabaseNb, folder) + replicatesPath \
+                + '/config_rho=' + str(rho) + '_sub_i='+str(innerIteration)+'_alpha='+str(alpha)+'_mlem_=' + MLEM \
+                + '/ADMM_' + str(threads) + '/'
+    imageName = str(total) + '_' + str(outerNb) + '_it' + str(innerNb) + '.img'
+
+    return imagePath + imageName
+
+
+def calculateDiffCurve(inners, outers, outputDatabaseNb, folder, optimizer, innerIteration, alpha, model='norm', Together=True, rho=0, threads = 128, REPLICATES=True, replicates=1, total=0, MLEM='False'):
+    if inners[-1] == innerIteration:
+        inners.pop()
+    if inners[0] == 0:
+        inners.pop(0)
+    for o in outers:
+        imageDiffs = []
+        for i in inners:
+            img1 = fijii_np(getImagePath(outputDatabaseNb, folder, optimizer, innerIteration, alpha, o, i, rho, threads, REPLICATES, replicates, total, MLEM), type='<d')
+            img2 = fijii_np(getImagePath(outputDatabaseNb, folder, optimizer, innerIteration, alpha, o, i+1 , rho, threads, REPLICATES, replicates, total, MLEM), type='<d')
+            imageDiff = 0
+            if model == 'norm' :
+                imageDiff = np.linalg.norm(img1 - img2)
+            elif model == 'max':
+                imageDiff = np.amax(np.abs(img1 - img2))
+            imageDiffs.append(imageDiff)
+        if Together:
+            figNum = 1
+        else:
+            figNum = o
+        PLOT(inners, imageDiffs, outers, o - 1,
+             figNum=figNum,
+             Xlabel='inner iterations',
+             Ylabel='legends -- outer iterations',
+             Title='Norm of image difference',
+             replicate=replicates,
+             imagePath=getDataFolderPath(outputDatabaseNb, folder)+'/imageDifference(' + model + ')/'+optimizer+'+a='+str(alpha),
+             whichOptimizer=optimizer,
+             Together=Together)
+
 

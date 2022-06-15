@@ -3,15 +3,15 @@ import numpy as np
 import os
 from pathlib import Path
 import pandas as pd
-from show_functions import getDatabasePath, getDataFolderPath, dldir, computeThose4, PLOT
+from show_functions import getDatabasePath, getDataFolderPath, dldir, computeThose4, PLOT, calculateDiffCurve
 import tuners
 
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(11) + '/'
+outputDatabaseNb = 11
+databasePath = getDatabasePath(outputDatabaseNb) + '/'
 dataFolderPath = '(threadSafe)ADMM-NewDual+adpAT+i100(*2)+o100+a=alpha0(tau100mu1)(replicates*1)(t128)'
 whichADMMoptimizer = tuners.ADMMoptimizerName[2]
-# NEWoptimizer = False
 
 REPLICATES = True
 replicates = 1
@@ -22,10 +22,21 @@ innerIteration = 100
 
 vb = 1
 threads = 128
+SHOW = False
 
-option = 1
+option = 4
 
-OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters']
+# --------------------------------------
+# calculate difference curves parameters
+inners = list(range(innerIteration))
+outers = list(range(1,100))
+alpha = 0.005
+MODEL = 'max'
+TOGETHER = False
+# --------------------------------------
+
+#            0            1              2              3                 4
+OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters', 'calculateDiffCurve']
 tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
 if tuners_tag == 'alphas':
     # outerIteration = 1000
@@ -52,6 +63,9 @@ elif tuners_tag == 'adaptiveRho':
     tuners = alpha0s
     fp = open(databasePath + dataFolderPath + '/adaptiveProcess' + str(duplicate) + '.log', mode='w+')
 
+elif tuners_tag == 'calculateDiffCurve':
+    tuners = outers
+
 elif tuners_tag == 'inner_iters':
     bestInner = 0
 
@@ -68,7 +82,7 @@ elif tuners_tag == 'inner_iters':
     # dataFolderPath = '/ADMMLim+alpha=' + str(bestAlpha) + '+i...+o' + str(outerIteration)
     tuners = inner_iters
 
-else:
+elif tuners_tag == 'outer_iters':
     bestAlpha = 0.005
     bestInner = 65
     outerIteration = 100
@@ -83,6 +97,8 @@ likelihoods_inner = []
 likelihoods_outer = []
 
 for i in range(len(tuners)):
+    if tuners_tag == 'calculateDiffCurve':
+        break
     # tune alpha
     if tuners_tag == 'alphas':
         likelihoods = []
@@ -331,9 +347,18 @@ for i in range(len(tuners)):
         likelihood = float(theLikelihoodRowString)
         likelihoods_outer.append(likelihood)
 
-    else:
-        print('Wrong tuners!')
-        break
+# calculate difference curves
+if tuners_tag == 'calculateDiffCurve':
+    calculateDiffCurve(inners, outers, outputDatabaseNb, dataFolderPath,
+                       optimizer=whichADMMoptimizer,
+                       innerIteration=innerIteration,
+                       alpha=alpha,
+                       threads=threads,
+                       REPLICATES=REPLICATES,
+                       replicates=replicates,
+                       Together=TOGETHER,
+                       model=MODEL)
+
 if tuners_tag == 'adaptiveRho':
     fp.close()
 
@@ -354,4 +379,5 @@ elif tuners_tag == 'alphas':
     plt.xlabel('alpha')
     plt.title('likelihood')
 
-plt.show()
+if SHOW:
+    plt.show()
