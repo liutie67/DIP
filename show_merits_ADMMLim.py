@@ -8,22 +8,22 @@ import tuners
 
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
-databasePath = getDatabasePath(10) + '/'
-dataFolderPath = 'test17t3-1'
-whichADMMoptimizer = tuners.ADMMoptimizerName[3]
-NEWoptimzer = False
+databasePath = getDatabasePath(11) + '/'
+dataFolderPath = '(threadSafe)ADMM-NewDual+adpAT+i100(*2)+o100+a=alpha0(tau100mu1)(replicates*1)(t128)'
+whichADMMoptimizer = tuners.ADMMoptimizerName[2]
+# NEWoptimizer = False
 
 REPLICATES = True
 replicates = 1
-ALPHAS = [0.005]
+ALPHAS = tuners.alphas0
 
-outerIteration = 10
-innerIteration = 10
+outerIteration = 100
+innerIteration = 100
 
 vb = 1
-threads = 3
+threads = 128
 
-option = 0
+option = 1
 
 OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters']
 tuners_tag = OPTION[option]  # tuners = 'alphas' or 'inner_iters' or 'outer_iters' or 'adaptiveRho'
@@ -225,7 +225,7 @@ for i in range(len(tuners)):
             relDuals.append(relDual)
 
             # get xi
-            # xis.append(relPrimal/(relDual*2))
+            xis.append(relPrimal/(relDual*2))
 
         PLOT(outer_iters, adaptiveAlphas, tuners, i, figNum=1,
              Xlabel='Outer iteration',
@@ -258,7 +258,7 @@ for i in range(len(tuners)):
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
-        '''
+
         PLOT(outer_iters, xis, tuners, i, figNum=5,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
@@ -266,7 +266,7 @@ for i in range(len(tuners)):
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
-        '''
+
         print('No.' + str(i), '  initial alpha =', tuners[i], '\trel primal', '\trel dual', file=fp)
         print(file=fp)
         for k in range(1, len(adaptiveAlphas)+1):
