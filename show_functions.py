@@ -264,7 +264,13 @@ def calculateDiffCurve(inners, outers, outputDatabaseNb, folder, optimizer, inne
                 imageDiff = np.linalg.norm(img1 - img2)
                 title = 'Norm of image difference'
             elif model == 'max':
-                imageDiff = np.amax(np.abs(img1 - img2))
+                imageDiff1 = np.amax(img1 - img2)
+                imageDiff2 = np.amin(img1 - img2)
+                if np.abs(imageDiff1)>=np.abs(imageDiff2):
+                    imageDiff = imageDiff1
+                else:
+                    imageDiff = imageDiff2
+
                 title = 'abs(Max) of image difference'
             imageDiffs.append(imageDiff)
         if Together:
