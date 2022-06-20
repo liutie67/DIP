@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import datetime
+import pandas as pd
 
 subroot = os.getcwd() + '/data/Algo'
 baseroot = os.getcwd()
@@ -211,11 +212,13 @@ def PLOT(X,
          Together=True):
     plt.figure(figNum)
     end = len(X)
+    '''
     if tuners[nbTuner] == bestValue:
         plt.plot(X[beginning:end], Y[beginning:end], 'r-x', label=str(tuners[nbTuner]))
     elif nbTuner in showLess:
         plt.plot(X[beginning:end], Y[beginning:end], '--',label=str(tuners[nbTuner]))
-    elif nbTuner < 10:
+    '''
+    if nbTuner < 10:
         plt.plot(X[beginning:end], Y[beginning:end], label=str(tuners[nbTuner]))
     elif 10 <= nbTuner < 20:
         plt.plot(X[beginning:end], Y[beginning:end], '.-', label=str(tuners[nbTuner]))
@@ -288,3 +291,11 @@ def calculateDiffCurve(inners, outers, outputDatabaseNb, folder, optimizer, inne
              Together=Together)
 
 
+def getValueFromLogRow(pathLog, row):
+    log = pd.read_table(pathLog)
+    theRow = log.loc[[row]]
+    theRowArray = np.array(theRow)
+    theRowString = theRowArray[0, 0]
+    theValue = float(theRowString)
+
+    return theValue

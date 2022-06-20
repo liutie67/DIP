@@ -4,12 +4,14 @@ import os
 from pathlib import Path
 import pandas as pd
 from show_functions import getDatabasePath, getDataFolderPath, dldir, computeThose4, PLOT, calculateDiffCurve
+from show_functions import getValueFromLogRow
 import tuners
 
 from panel_show_merits_ADMMLim import colors, outputDatabaseNb, dataFolderPath, whichADMMoptimizer, REPLICATES
 from panel_show_merits_ADMMLim import replicates, ALPHAS, outerIteration, innerIteration
 from panel_show_merits_ADMMLim import vb, threads, SHOW, tuners_tag
 from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
+from panel_show_merits_ADMMLim import _3NORMS
 
 
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
@@ -109,6 +111,15 @@ for i in range(len(tuners)):
                 likelihoods_alpha.append(likelihood)
             likelihoods.append(likelihood)
 
+        PLOT(outer_iters, likelihoods, tuners, i, figNum=6,
+             Xlabel='Outer iteration',
+             Ylabel='The legend shows different alpha',
+             Title='Likelihood(same scale)',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=databasePath + dataFolderPath)
+        plt.ylim([2.904e6, 2.919e6])
+
         PLOT(outer_iters, likelihoods, tuners, i, figNum=1,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
@@ -176,6 +187,9 @@ for i in range(len(tuners)):
         relPrimals = []
         relDuals = []
         xis = []
+        normAxvs = []
+        normAxvus = []
+        normAxv1us = []
         for outer_iter in range(1,outerIteration+1):
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
@@ -186,38 +200,32 @@ for i in range(len(tuners)):
                         + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
             logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
             path_txt = logfolder + logfile_name
-            theLog = pd.read_table(path_txt)
 
             # get adaptive alpha
-            theAlphaRow = theLog.loc[[0]]
-            theAlphaRowArray = np.array(theAlphaRow)
-            theAlphaRowString = theAlphaRowArray[0, 0]
-            adaptiveAlpha = float(theAlphaRowString)
-            adaptiveAlphas.append(adaptiveAlpha)
+            adaptiveAlphas.append(getValueFromLogRow(path_txt, 0))
 
             # get adaptive tau
-            theTauRow = theLog.loc[[2]]
-            theTauRowArray = np.array(theTauRow)
-            theTauRowString = theTauRowArray[0, 0]
-            adaptiveTau = float(theTauRowString)
-            adaptiveTaus.append(adaptiveTau)
+            adaptiveTaus.append(getValueFromLogRow(path_txt, 2))
 
             # get relative primal residual
-            theRelPrimalRow = theLog.loc[[6]]
-            theRelPrimalRowArray = np.array(theRelPrimalRow)
-            theRelPrimalRowString = theRelPrimalRowArray[0, 0]
-            relPrimal = float(theRelPrimalRowString)
-            relPrimals.append(relPrimal)
+            relPrimals.append(getValueFromLogRow(path_txt, 6))
 
-            # get adaptive tau
-            theRelDualRow = theLog.loc[[8]]
-            theRelDualRowArray = np.array(theRelDualRow)
-            theRelDualRowString = theRelDualRowArray[0, 0]
-            relDual = float(theRelDualRowString)
-            relDuals.append(relDual)
+            # get relative dual residual
+            relDuals.append(getValueFromLogRow(path_txt, 8))
 
             # get xi
-            xis.append(relPrimal/(relDual*2))
+            xis.append(getValueFromLogRow(path_txt, 6)/(getValueFromLogRow(path_txt, 8)*2))
+
+            if _3NORMS:
+                # get norm of Ax(n+1) - v(n+1)
+                normAxvs.append(getValueFromLogRow(path_txt, 10))
+
+                # get norm of Ax(n+1) - v(n) + u(n)
+                normAxvus.append(getValueFromLogRow(path_txt, 12))
+
+                # get norm of Ax(n+1) - v(n+1) + u(n)
+                normAxv1us.append(getValueFromLogRow(path_txt, 14))
+
 
         PLOT(outer_iters, adaptiveAlphas, tuners, i, figNum=1,
              Xlabel='Outer iteration',
@@ -258,6 +266,31 @@ for i in range(len(tuners)):
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
+
+        if _3NORMS:
+            PLOT(outer_iters, normAxvs, tuners, i, figNum=6,
+                 Xlabel='Outer iteration',
+                 Ylabel='The legend shows different alpha',
+                 Title='norm of Ax(n+1) - v(n+1)',
+                 replicate=replicates,
+                 whichOptimizer=whichADMMoptimizer,
+                 imagePath=databasePath + dataFolderPath)
+
+            PLOT(outer_iters, normAxvus, tuners, i, figNum=7,
+                 Xlabel='Outer iteration',
+                 Ylabel='The legend shows different alpha',
+                 Title='norm of Ax(n+1) - v(n) + u(n)',
+                 replicate=replicates,
+                 whichOptimizer=whichADMMoptimizer,
+                 imagePath=databasePath + dataFolderPath)
+
+            PLOT(outer_iters, normAxv1us, tuners, i, figNum=8,
+                 Xlabel='Outer iteration',
+                 Ylabel='The legend shows different alpha',
+                 Title='norm of Ax(n+1) - v(n+1) + u(n)',
+                 replicate=replicates,
+                 whichOptimizer=whichADMMoptimizer,
+                 imagePath=databasePath + dataFolderPath)
 
         print('No.' + str(i), '  initial alpha =', tuners[i], '\trel primal', '\trel dual', file=fp)
         print(file=fp)
