@@ -11,7 +11,7 @@ from panel_show_merits_ADMMLim import colors, outputDatabaseNb, dataFolderPath, 
 from panel_show_merits_ADMMLim import replicates, ALPHAS, outerIteration, innerIteration
 from panel_show_merits_ADMMLim import vb, threads, SHOW, tuners_tag
 from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
-from panel_show_merits_ADMMLim import _3NORMS
+from panel_show_merits_ADMMLim import _3NORMS, _2R
 
 
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
@@ -190,6 +190,8 @@ for i in range(len(tuners)):
         normAxvs = []
         normAxvus = []
         normAxv1us = []
+        primals = []
+        duals = []
         for outer_iter in range(1,outerIteration+1):
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
@@ -225,6 +227,13 @@ for i in range(len(tuners)):
 
                 # get norm of Ax(n+1) - v(n+1) + u(n)
                 normAxv1us.append(getValueFromLogRow(path_txt, 14))
+
+            if _2R:
+                # get norm of primal residual
+                primals.append(getValueFromLogRow(path_txt, 16))
+
+                # get norm of dual residual
+                duals.append(getValueFromLogRow(path_txt, 18))
 
 
         PLOT(outer_iters, adaptiveAlphas, tuners, i, figNum=1,
@@ -288,6 +297,23 @@ for i in range(len(tuners)):
                  Xlabel='Outer iteration',
                  Ylabel='The legend shows different alpha',
                  Title='norm of Ax(n+1) - v(n+1) + u(n)',
+                 replicate=replicates,
+                 whichOptimizer=whichADMMoptimizer,
+                 imagePath=databasePath + dataFolderPath)
+
+        if _2R:
+            PLOT(outer_iters, primals, tuners, i, figNum=9,
+                 Xlabel='Outer iteration',
+                 Ylabel='The legend shows different alpha',
+                 Title='primal residual',
+                 replicate=replicates,
+                 whichOptimizer=whichADMMoptimizer,
+                 imagePath=databasePath + dataFolderPath)
+
+            PLOT(outer_iters, duals, tuners, i, figNum=10,
+                 Xlabel='Outer iteration',
+                 Ylabel='The legend shows different alpha',
+                 Title='dual residual',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
                  imagePath=databasePath + dataFolderPath)
