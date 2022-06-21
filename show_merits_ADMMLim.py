@@ -11,7 +11,7 @@ from panel_show_merits_ADMMLim import colors, outputDatabaseNb, dataFolderPath, 
 from panel_show_merits_ADMMLim import replicates, ALPHAS, outerIteration, innerIteration
 from panel_show_merits_ADMMLim import vb, threads, SHOW, tuners_tag
 from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
-from panel_show_merits_ADMMLim import _3NORMS, _2R
+from panel_show_merits_ADMMLim import _3NORMS, _2R, _squreNorm
 
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
 
@@ -189,7 +189,7 @@ for i in range(len(tuners)):
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, Xnorms, tuners, i, figNum=6,
+        PLOT(outer_iters, Xnorms, tuners, i, figNum=7,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
              Title='norm of x',
@@ -197,7 +197,7 @@ for i in range(len(tuners)):
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, Vnorms, tuners, i, figNum=7,
+        PLOT(outer_iters, Vnorms, tuners, i, figNum=8,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
              Title='norm of v',
@@ -205,7 +205,7 @@ for i in range(len(tuners)):
              whichOptimizer=whichADMMoptimizer,
              imagePath=databasePath + dataFolderPath)
 
-        PLOT(outer_iters, Unorms, tuners, i, figNum=8,
+        PLOT(outer_iters, Unorms, tuners, i, figNum=9,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
              Title='norm of u',
@@ -309,6 +309,10 @@ for i in range(len(tuners)):
              imagePath=databasePath + dataFolderPath)
 
         if _3NORMS:
+            if _squreNorm:
+                normAxvs = np.sqrt(normAxvs)
+                normAxvus = np.sqrt(normAxvus)
+                normAxv1us = np.sqrt(normAxv1us)
             PLOT(outer_iters, normAxvs, tuners, i, figNum=6,
                  Xlabel='Outer iteration',
                  Ylabel='The legend shows different alpha',
@@ -334,6 +338,9 @@ for i in range(len(tuners)):
                  imagePath=databasePath + dataFolderPath)
 
         if _2R:
+            if _squreNorm:
+                primals = np.sqrt(primals)
+                duals = np.sqrt(duals)
             PLOT(outer_iters, primals, tuners, i, figNum=9,
                  Xlabel='Outer iteration',
                  Ylabel='The legend shows different alpha',
