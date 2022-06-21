@@ -19,7 +19,7 @@ from iResults import iResults
 from iResultsReplicates import iResultsReplicates
 from iResultsAlreadyComputed import iResultsAlreadyComputed
 
-from tuners import ADMMoptimizerName
+from Tuners import ADMMoptimizerName
 
 def specialTask(method_special='nested',
                 max_iter=30,

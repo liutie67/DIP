@@ -16,7 +16,7 @@ from skimage.metrics import peak_signal_noise_ratio
 #from vGeneral import vGeneral
 from vDenoising import vDenoising
 
-from tuners import ADMMoptimizerName
+from Tuners import ADMMoptimizerName
 
 class iResults(vDenoising):
     def __init__(self,config):

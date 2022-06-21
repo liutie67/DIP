@@ -8,7 +8,7 @@ import numpy as np
 # Local files to import
 from vReconstruction import vReconstruction
 
-from tuners import ADMMoptimizerName
+from Tuners import ADMMoptimizerName
 
 class iComparison(vReconstruction):
     def __init__(self, config):

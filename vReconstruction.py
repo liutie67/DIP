@@ -12,7 +12,7 @@ import numpy as np
 # Local files to import
 from vGeneral import vGeneral
 
-from tuners import ADMMoptimizerName
+from Tuners import ADMMoptimizerName
 
 import abc
 class vReconstruction(vGeneral):
