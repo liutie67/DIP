@@ -299,3 +299,12 @@ def getValueFromLogRow(pathLog, row):
     theValue = float(theRowString)
 
     return theValue
+
+
+def computeNorm(f_path, type='<d'):
+    dtype = np.dtype(type)
+    fid = open(f_path, 'rb')
+    data = np.fromfile(fid, dtype)
+    data_norm = np.linalg.norm(data)
+
+    return data_norm
