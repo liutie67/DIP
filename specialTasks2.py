@@ -1,20 +1,17 @@
 from main import specialTask
+import Tuners
+
+from show_functions import moveRuns, moveData, initialALL, moveALL
 
 
+# ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx'] #
+#                            0                  1                       2                           3                             4               #
 
-# MLEM
-'''
-specialTask(method_special='MLEM', max_iter=1000, nb_subsets=1, mlem_sequence=False)
-
-'''
-# DIP(Gong)
-lrs_sp = [0.5, 1, 2, 3, 4]
-for lr_sp in lrs_sp:
-    specialTask(method_special='Gong',
-                sub_iter_special=1000,
-                lr_special=lr_sp,
-                skip_special=0,
-                input_special='CT',
-                opti_special='LBFGS',
-                scaling_special='normalization',
-                DIP_special=True)
+initialALL()
+specialTask(method_special=Tuners.ADMMoptimizerName[0],
+            inner_special=1,  # real inner
+            outer_special=100*100,
+            alpha_special=Tuners.alphas0,
+            replicates_special=1,
+            threads=128)  # mu= ?, tau = ?
+moveALL('+2r+new3norms+NonAdp+i1+o100*100+t128+a=alphas0+mu1+tau100')
