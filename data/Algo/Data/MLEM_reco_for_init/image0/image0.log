@@ -1,0 +1,116 @@
+castor-recon() -> Launch reconstruction from CASToR version 3.1.1.
+sOutputManager::LogCommandLine() -> Write command line into the log file
+==================================================================================================
+                                      COMMAND LINE CONTEXT
+==================================================================================================
+Command line: castor-recon -dim 112,112,1 -vox 4,4,4 -dout /home/liutie/stageSTING/DIP/data/Algo/Data/MLEM_reco_for_init/image0 -df /home/liutie/stageSTING/DIP/data/Algo/Data/database_v2/image0/data0/data0.cdh -vb 3 -it 1:1 -opti MLEM 
+Working directory: /home/liutie/stageSTING/DIP/runs/do_everything_2022-06-22_18-51-35/do_everything_9384f_00008_8_FLTNB=double,NNEPPS=False,alpha=1,average_replicates=False,experiment=24,finetuning=last,image=image0,_2022-06-22_18-51-37
+Data of execution: Wed Jun 22 18:51:38 2022
+Float numbers precision in bytes (for matrices and some computations): 8
+Float numbers precision in bytes (for sensitive computations that require at least double precision): 8
+Float numbers precision in bytes (for datafile reading/writing): 4
+Float numbers precision in bytes (for scanner LUT reading/writing): 4
+CASToR version: 3.1.1
+==================================================================================================
+sScannerManager::FindScannerSystem() -> Search for scanner PET_SIEMENS_MMR_2D in the configuration directory
+sScannerManager::GetAvailableScanners() -> Scan the scanner configuration directory
+  --> matched custom LUT for the scanner system: PET_SIEMENS_MMR_2D.hscan
+sScannerManager::BuildScannerObject() -> Start building
+sScannerManager::InstantiateScanner() -> Instantiate the scanner geometry structure
+iScannerPET::Instantiate() -> Create scanner structure and read parameters from configuration file
+sScannerManager::GetGeometricInfoFromDataFile() -> Look for acquisition specific settings into datafile header
+iScannerPET::GetGeometricInfoFromDataFile() -> Specific to PET
+sScannerManager::BuildLUT() -> Generate the geometric Look-Up Table
+iScannerPET::BuildLUT() -> Build LUT for scanner elements coordinates and orientations
+iScannerPET::LoadLUT() -> Start loading LUT from user-provided file
+  --> LUT successfully loaded
+sScannerManager::Initialize() -> From scanner PET_SIEMENS_MMR_2D
+iScannerPET::Initialize() -> Initialize remaining stuff for scanner to be ready
+oImageDimensionsAndQuantification::Initialize() -> Initialize image dimensions, basis functions and quantification
+  --> Image dimensions: [112;112;1] voxels of [4.0000000000000000e+00;4.0000000000000000e+00;4.0000000000000000e+00] mm3
+  --> FOV size: [4.4800000000000000e+02;4.4800000000000000e+02;4.0000000000000000e+00] mm3
+sRandomNumberGenerator::Initialize ...
+sRandomNumberGenerator::Initialize() -> Seed for thread 0 : 1735324289
+vDataFile::ReadInfoInHeader() -> Read datafile header from '/home/liutie/stageSTING/DIP/data/Algo/Data/database_v2/image0/data0/data0.cdh ...'
+oImageDimensionsAndQuantification::SetAcquisitionTime() -> Static single bed acquisition with duration [ 0.0000000000000000e+00 : 1.0000000000000000e+00 ] seconds
+  --> Correct for frame duration
+iDataFilePET::ReadSpecificInfoInHeader() -> Read information specific to PET
+oImageDimensionsAndQuantification::SetPETIsotope() -> Isotope INF has infinite half life and 1.0000000000000000e+00 branching ratio
+  --> Correct for branching ratio
+oImageDimensionsAndQuantification::SetCalibrationFactor() -> Correct for following calibration factor: 7.4901400000000001e+02
+vDataFile::CheckParameters() -> Check mandatory parameters
+iDataFilePET::ComputeSizeEvent() -> In bytes
+  --> Event size = 32 bytes
+vDataFile::InitializeMappedFile() -> Map datafile to memory
+iDataFilePET::PrepareDataFile() -> Build histogram events
+  --> Allocating an event buffer for each thread
+  --> Correct for attenuation
+  --> Correct for normalization
+  --> Correct for scatter events
+  --> Correct for random events
+oDynamicDataManager::InitDynamicData() -> Initialize dynamic data management
+oDynamicDataManager::CheckParameters() -> Check parameters for dynamic data settings
+oDynamicDataManager::SetDynamicSpecificQuantificationFactors() ... 
+oProjectorManager::Initialize() -> Initialize projectors and projection lines
+iProjectorIncrementalSiddon::InitializeSpecific() -> Use incremental Siddon projector
+vProjector::Initialize() -> Exit function
+----- Dynamic model: No parameters given - setting diagonal basis functions !
+oOptimizerManager::Initialize() -> Initialize optimizer and penalty
+iOptimizerMLEM::InitializeSpecific() -> Use the MLEM optimizer
+  --> Initial image value: 1.0000000000000000e+00
+  --> Data space denominator threshold: 1.0000000000000000e-10
+  --> Minimum image update factor: 1.0000000000000000e-02
+sChronoManager::Initialize() -> Initialize all duration counters for profiling
+vAlgorithm::SetNbIterationsAndSubsets() ->  Selected numbers of subsets for each iteration:
+  Iteration / number of subsets 
+    1  /  1
+vAlgorithm::SetOutputIterations ...
+iIterativeAlgorithm::InitSpecificOptions ... 
+vAlgorithm::Iterate ...
+vAlgorithm::IterateCPU() -> Start algorithm for 1 iterations
+vAlgorithm::StepBeforeIterationLoop ... 
+oImageSpace::InstantiateImage() -> Initialize to 0.
+oImageSpace::InstantiateForwardImage() -> Initialize to 0.
+oImageSpace::InstantiateSensitivityImage() -> For all threads
+oImageSpace::InstantiateOutputImage ...
+oImageSpace::InstantiateVisitedVoxelsImage ...
+oImageSpace::InitSensitivityImage ...
+iIterativeAlgorithm::StepBeforeIterationLoop ... 
+oImageSpace::InstantiateBackwardImageFromDynamicBasis() -> Initialize to 0.
+oImageSpace::InitImage ...
+iIterativeAlgorithm::StepBeforeSubsetLoop ... 
+vAlgorithm::IterateCPU() -> Start iteration 1/1 subset 1/1
+iIterativeAlgorithm::StepPreProcessInsideSubsetLoop ... 
+oImageSpace::InitBackwardImage ...
+oImageSpace::PrepareForwardImage ...
+iIterativeAlgorithm::StepInnerLoopInsideSubsetLoop() -> Start loop over eventsiiIterativeAlgorithm::StepPostProcessInsideSubsetLoop ... 
+oImageSpace::Reduce() -> Merge parallel results
+  --> Over threads ...
+oOptimizerManager::ImageUpdateStep() -> Proceed to image update
+vOptimizer::UpdateVisitedVoxels() -> Tick visited voxels based on sensitivity
+vOptimizer::ImageUpdateStep() -> Start image update
+vAlgorithm::IterateCPU() -> Time spent for subset 1 | User: 1 sec | CPU: 1.8166800000000000e-01 sec
+iIterativeAlgorithm::StepAfterSubsetLoop() -> Clean never visited voxels and save images if needed
+oImageSpace::CleanNeverVisitedVoxels ...
+iIterativeAlgorithm::StepAfterSubsetLoop() -> Save image at iteration 1
+oImageSpace::PrepareForwardImage ...
+oImageSpace::SaveOutputImage ...
+IntfWriteImgFile (static/dynamic image) ...
+vAlgorithm::StepAfterIterationLoop ... 
+oImageSpace::DeallocateSensitivityImage() -> Free memory
+oImageSpace::DeallocateForwardImage() -> Free memory
+oImageSpace::DeallocateImage() -> Free memory
+oImageSpace::DeallocateOutputImage ...
+oImageSpace::InstantiateVisitedVoxelsImage ...
+iIterativeAlgorithm::StepAfterIterationLoop ... 
+oImageSpace::DeallocateBackwardImageFromDynamicBasis() -> Free memory
+vAlgorithm::IterateCPU() -> Total time spent | User: 1 sec | CPU: 1.8259400000000001e-01 sec
+sChronoManager::Display() -> Results from the profiling
+  --> Profiling of the data update step:
+    | Datafile management: 00 hours 00 mins 00 secs 004 ms
+    | Dynamic management: 00 hours 00 mins 00 secs 002 ms
+    | Projection management: 00 hours 00 mins 00 secs 128 ms
+    | Optimizer management: 00 hours 00 mins 00 secs 039 ms
+  --> Profiling of the convolution steps: 00 hours 00 mins 00 secs 000 ms
+  --> Custom update step 1: 00 hours 00 mins 00 secs 000 ms
+

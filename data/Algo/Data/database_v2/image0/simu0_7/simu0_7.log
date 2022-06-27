@@ -1,0 +1,76 @@
+==================================================================================================
+                                      COMMAND LINE CONTEXT
+==================================================================================================
+SMprojector.exe -m mmr2d -c cmap0/cmap0.ecm -i image0.hdr -a image0_atn.hdr -s 0.35 -r 0.9 -l 0.8 -p 4. -v 5 -P 1500000*dim3 -o simu0_7 -D 
+Date of execution (since Epoch): 1650382142
+Code precision in bytes: 4
+==================================================================================================
+oSimulator::InitScannerStuff() -> Initialize all scanner related stuff
+oScanner::Constructor() -> Construct
+oScanner::Initialize() ...
+  --> Total number of crystals: 448  [448;1]
+oScanner::ReadCrystalMap() -> Read esteban crystal map from file 'cmap0/cmap0.ecm'
+oTableMMR2D::Constructor() -> Initialize MMR 2D conversion table
+oTableMMR2D::ComputeRingTables() -> Compute the ring conversion tables
+oSimulator::InitInputImages() -> Initialize input images
+  --> Read input image header file 'image0.hdr' ...
+  --> Dimensions [112;112;1]
+  --> Voxel size [4;4;4] mm
+  --> FOV size [448;448;4] mm
+  --> Reading input image from file 'image0.img' ...
+  --> Read input mumap header file 'image0_atn.hdr' ...
+  --> Reading input mumap from file 'image0_atn.img' ...
+oSimulator::InitPSF() -> Initialize PSF stuff
+  --> Dealing with PSF stuffs ...
+  --> PSF kernel of [3;3;3] voxels width for [4;4] mm FWHMs (truncation at 3.5 sigmas) ...
+oSimulator::Make3DGaussianKernel() -> Calculating kernel components
+oSimulator::Convolve3D() -> Convolving input image with the PSF ...
+oSimulator::Convolve3D() -> Convolving input image with the PSF ...
+oSimulator::Project() -> Project input image into output sinogram
+  --> Sinogram dimensions: [344;252;1]
+  --> Span: 1 | Maximum ring difference: 0 | Mash: 1
+  --> Project true component ... 
+  --> Useful projected LORs: 68516
+  --> Time spent | User: 0 sec | CPU: 0.082903 sec
+oSimulator::ApplyCounts() -> Apply scatter, random and poisson effects
+  --> Compute true component ...
+      Compute total true
+  --> Compute scatter component ...
+      Allocate sinogram
+      Correct for normalization
+      Convolve
+      Affect by normalization
+      Scale to desired scatter fraction (0.35)
+  --> Compute random component ...
+      Allocate sinogram
+      Compute random from fan sum
+      Add LSO flat contribution (80% of total randoms)
+      Scale to desired random fraction (0.9)
+  --> Total projections:
+      Trues   : 7.25461e+07
+      Scatters: 3.90633e+07
+      Randoms : 1.00448e+09
+  --> Compute prompt component ...
+      Allocate prompt sinogram
+      Compute total prompt: 1.11609e+09
+      Number of counts provided, so compute associated ECF
+      Scale sinograms (ECF: 744.063 for total counts of 1500000)
+      Shoot random numbers
+      Apply Poisson noise to compute prompt sinogram
+  --> Prompt counts  : 1500638
+  --> True counts    : 97375
+  --> Scatter counts : 52440
+  --> Random counts  : 1350823
+oSimulator::SaveSinograms() -> Save all sinograms
+  --> Write prompt sinogram data as 'simu0_7/simu0_7_pt.s'
+  --> Write prompt sinogram header as 'simu0_7/simu0_7_pt.s.hdr'
+  --> Normalize scatter sinogram
+  --> Write scatter sinogram data as 'simu0_7/simu0_7_sc.s'
+  --> Write scatter sinogram header as 'simu0_7/simu0_7_sc.s.hdr'
+  --> Write random sinogram data as 'simu0_7/simu0_7_rd.s'
+  --> Write random sinogram header as 'simu0_7/simu0_7_rd.s.hdr'
+  --> Write attn sinogram data as 'simu0_7/simu0_7_at.s'
+  --> Write attn sinogram header as 'simu0_7/simu0_7_at.s.hdr'
+  --> Write normalization sinogram data as 'simu0_7/simu0_7_nm.s'
+  --> Write normalization sinogram header as 'simu0_7/simu0_7_nm.s.hdr'
+  --> Write normalization calibration header as 'simu0_7/simu0_7_nm.calib.hdr'

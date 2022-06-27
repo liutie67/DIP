@@ -1,0 +1,53 @@
+==================================================================================================
+                                      COMMAND LINE CONTEXT
+==================================================================================================
+SMmaker.exe -m mmr2d -o data0_8 -p simu0_8/simu0_8_pt.s.hdr -r simu0_8/simu0_8_rd.s.hdr -s simu0_8/simu0_8_sc.s.hdr -n simu0_8/simu0_8_nm.s.hdr -A simu0_8/simu0_8_at.s -c cmap0/cmap0.ecm -castor -v 2 
+Date of execution (since Epoch): 1650382142
+Code precision in bytes: 4
+==================================================================================================
+oSinoModeCreation::Constructor() -> Construct
+oScanner::Constructor() -> Construct
+oScanner::Initialize() ...
+  --> Total number of crystals: 448  [448;1]
+oSinoModeCreation::InitInputFile() -> Initialize input file(s)
+oSinoModeCreation::InitPrompt() -> Initialize prompt sinogram from file 'simu0_8/simu0_8_pt.s.hdr'
+  --> Reading header file 'simu0_8/simu0_8_pt.s.hdr' ...
+!!!!! oSinoModeCreation::InitPrompt() -> No real isotope definition found, will not correct for decay nor branching ratio !
+  --> Reading data file 'simu0_8/simu0_8_pt.s' ...
+  --> Radial elements: 344 | Views: 252 | Sinograms: 1 | Span: 1 | Maximum ring difference: 0
+  --> Number of prompts: 1497919 | Delays: 1347776 | Net trues: 150143
+  --> Start acquisition: 0 s | Duration: 1 s
+oSinoModeCreation::InitRandom() -> Initialize random sinogram from file 'simu0_8/simu0_8_rd.s.hdr'
+  --> Reading header file 'simu0_8/simu0_8_rd.s.hdr' ...
+  --> Reading data file 'simu0_8/simu0_8_rd.s' ...
+oSinoModeCreation::InitScatter() -> Initialize scatter sinogram from file 'simu0_8/simu0_8_sc.s.hdr'
+  --> Reading header file 'simu0_8/simu0_8_sc.s.hdr' ...
+  --> Reading data file 'simu0_8/simu0_8_sc.s' ...
+oSinoModeCreation::InitNormalization() -> Initialize normalization sinogram from file 'simu0_8/simu0_8_nm.s.hdr'
+  --> Reading header file 'simu0_8/simu0_8_nm.s.hdr' ...
+  --> Reading file 'simu0_8/simu0_8_nm.s' ...
+  --> Reading calibration header file 'simu0_8/simu0_8_nm.calib.hdr' ...
+      Calibration factor: 755.909
+oSinoModeCreation::InitAttenuation() -> Initialize attenuation sinogram from file 'simu0_8/simu0_8_at.s'
+oSinoModeCreation::InitInputFile() -> Finish initializing input file(s)
+oSinoModeCreation::InitConversionTable() -> Initialize tables
+oTableMMR2D::Constructor() -> Initialize MMR 2D conversion table
+oTableMMR2D::ComputeRingTables() -> Compute the ring conversion tables
+oSinoModeCreation::ComputeTotalRandom() -> Compute total random counts
+  --> Total un-normalized counts: 1.35e+06
+oSinoModeCreation::ComputeTotalScatter() -> Compute total scatter counts
+  --> Total un-normalized scatter counts: 52500
+  --> Random proportion: 90.125 %
+  --> Scatter proportion: 3.50486 %
+  --> Scatter fraction: 35.4924 %
+  --> Trues / Prompts: 6.37011 %
+oScanner::ReadCrystalMap() -> Read esteban crystal map from file 'cmap0/cmap0.ecm'
+oSinoModeCreation::ProcessListMode() -> Begin processing ...
+  --> Initialization (writing mode: 1) ...
+  --> Shuffle sinogram indices ...
+  --> Process sinograms ...
+  --> Merge files ...
+  --> Write header file 'data0_8/data0_8.cdh' ...
+oSinoModeCreation::Destructor() -> Destroy
+oTableMMR2D::Destructor() -> Destroy conversion table
+oScanner::Destructor() -> Destroy
