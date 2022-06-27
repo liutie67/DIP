@@ -22,22 +22,22 @@ from iResultsAlreadyComputed import iResultsAlreadyComputed
 from Tuners import ADMMoptimizerName
 
 def specialTask(method_special='nested',
-                max_iter=30,
+                max_iter=[30],
                 replicates_special=1,
-                lr_special=0.04,
-                sub_iter_special=100,
-                opti_special='LBFGS',
+                lr_special=[0.04],
+                sub_iter_special=[100],
+                opti_special=['LBFGS'],
                 skip_special=[0],
-                scaling_special='normalization',
+                scaling_special=['normalization'],
                 input_special=['CT'],
-                inner_special=50,
-                outer_special=70,
+                inner_special=[50],
+                outer_special=[70],
                 alpha_special=[0.084],
-                rho_special=0,
+                rho_special=[0],
                 DIP_special=False,
-                nb_subsets=28,
+                nb_subsets=[28],
                 mlem_sequence=False,
-                threads=128):
+                threads=[128]):
 
     # Configuration dictionnary for general parameters (not hyperparameters)
     fixed_config = {
@@ -45,11 +45,11 @@ def specialTask(method_special='nested',
         "net" : tune.grid_search(['DIP']), # Network to use (DIP,DD,DD_AE,DIP_VAE)
         "method" : tune.grid_search([method_special]), # Reconstruction algorithm (nested, Gong, or algorithms from CASToR (MLEM, BSREM, AML, etc.))
         "processing_unit" : tune.grid_search(['CPU']), # CPU or GPU
-        "nb_threads" : tune.grid_search([threads]), # Number of desired threads. 0 means all the available threads
+        "nb_threads" : tune.grid_search(threads), # Number of desired threads. 0 means all the available threads
         "FLTNB" : tune.grid_search(['double']), # FLTNB precision must be set as in CASToR (double necessary for ADMMLim and nested)
         "debug" : False, # Debug mode = run without raytune and with one iteration
-        "max_iter" : tune.grid_search([max_iter]), # Number of global iterations for usual optimizers (MLEM, BSREM, AML etc.) and for nested
-        "nb_subsets" : tune.grid_search([nb_subsets]), # Number of subsets in chosen reconstruction algorithm (automatically set to 1 for ADMMLim)
+        "max_iter" : tune.grid_search(max_iter), # Number of global iterations for usual optimizers (MLEM, BSREM, AML etc.) and for nested
+        "nb_subsets" : tune.grid_search(nb_subsets), # Number of subsets in chosen reconstruction algorithm (automatically set to 1 for ADMMLim)
         "finetuning" : tune.grid_search(['last']),
         "experiment" : tune.grid_search([24]),
         "image_init_path_without_extension" : tune.grid_search(['1_im_value_cropped']), # Initial image of the reconstruction algorithm (taken from data/algo/Data/initialization)
@@ -61,23 +61,23 @@ def specialTask(method_special='nested',
     }
     # Configuration dictionnary for hyperparameters to tune
     hyperparameters_config = {
-        "rho" : tune.grid_search([rho_special]), # Penalty strength (beta) in PLL algorithms, ADMM penalty parameter (nested and Gong)
+        "rho" : tune.grid_search(rho_special), # Penalty strength (beta) in PLL algorithms, ADMM penalty parameter (nested and Gong)
 
         ## network hyperparameters
-        "lr" : tune.grid_search([lr_special]), # Learning rate in network optimization
+        "lr" : tune.grid_search(lr_special), # Learning rate in network optimization
         #"lr" : tune.grid_search([0.001,0.041,0.01]), # Learning rate in network optimization
-        "sub_iter_DIP" : tune.grid_search([sub_iter_special]), # Number of epochs in network optimization
-        "opti_DIP" : tune.grid_search([opti_special]), # Optimization algorithm in neural network training (Adam, LBFGS)
+        "sub_iter_DIP" : tune.grid_search(sub_iter_special), # Number of epochs in network optimization
+        "opti_DIP" : tune.grid_search(opti_special), # Optimization algorithm in neural network training (Adam, LBFGS)
         "skip_connections" : tune.grid_search(skip_special), # Number of skip connections in DIP architecture (0, 1, 2, 3)
-        "scaling" : tune.grid_search([scaling_special]), # Pre processing of neural network input (nothing, uniform, normalization, standardization)
+        "scaling" : tune.grid_search(scaling_special), # Pre processing of neural network input (nothing, uniform, normalization, standardization)
         "input" : tune.grid_search(input_special), # Neural network input (random or CT)
         #"input" : tune.grid_search(['CT','random']), # Neural network input (random or CT)
         "d_DD" : tune.grid_search([4]), # d for Deep Decoder, number of upsampling layers. Not above 4, otherwise 112 is too little as output size / not above 6, otherwise 128 is too little as output size
         "k_DD" : tune.grid_search([32]), # k for Deep Decoder
 
         ## ADMMLim - OPTITR hyperparameters
-        "sub_iter_PLL" : tune.grid_search([inner_special]), # Number of inner iterations in ADMMLim (if mlem_sequence is False) or in OPTITR (for Gong)
-        "nb_iter_second_admm": tune.grid_search([outer_special]), # Number outer iterations in ADMMLim
+        "sub_iter_PLL" : tune.grid_search(inner_special), # Number of inner iterations in ADMMLim (if mlem_sequence is False) or in OPTITR (for Gong)
+        "nb_iter_second_admm": tune.grid_search(outer_special), # Number outer iterations in ADMMLim
         "alpha" : tune.grid_search(alpha_special), # alpha (penalty parameter) in ADMMLim
 
         ## hyperparameters from CASToR algorithms
