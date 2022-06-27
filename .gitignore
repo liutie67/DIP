@@ -1,12 +1,6 @@
-/data/Algo/Data/database_v2
-/data/Algo/Data/initialization
-/data/Algo/Data/MLEM_reco_for_init
-
 /data/Algo/debug
 /data/Algo/image0
 /data/Algo/metrics
-
-/data/Algo/suffixes*
 
 /__pycache__
 /models/__pycache__
@@ -14,16 +8,5 @@
 /runs
 /runs1
 
-specialTasks.py
 /.idea
-
-/data/Algo/diff_img.png
-/data/Algo/img1.png
-/data/Algo/img2.png
-/data/Algo/relative_diff_img.png
-
-experimentalPlatform.py
-
-panel_show_merits_DIP.py
-panel_show_merits_ADMMLim.py
 
