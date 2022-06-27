@@ -23,7 +23,7 @@ if tuners_tag == 'alphas':
     alphas = ALPHAS
 
     inner_iters = range(innerIteration)
-    outer_iters = range(outerIteration)
+    outer_iters = outers
     # dataFolderPath = 'ADMM-old-adaptive+i50+o70+alpha0=...*16+3+2'
     tuners = alphas
 
@@ -35,7 +35,7 @@ elif tuners_tag == 'adaptiveRho':
     if REPLICATES:
         duplicate += '_rep' + str(replicates)
     inner_iters = range(innerIteration)
-    outer_iters = range(outerIteration)
+    outer_iters = outers
     # dataFolderPath = 'ADMM-old-adaptive+i50+o70+alpha0=...*16+3+2'
     tuners = alpha0s
     fp = open(databasePath + dataFolderPath + '/adaptiveProcess' + str(duplicate) + '.log', mode='w+')
@@ -79,7 +79,7 @@ for i in range(len(tuners)):
     # tune alpha
     if tuners_tag == 'alphas':
         likelihoods = []
-        for outer_iter in range(1, outerIteration + 1):
+        for outer_iter in outers:
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
                                  + whichADMMoptimizer
@@ -134,7 +134,7 @@ for i in range(len(tuners)):
         Xnorms = []
         Vnorms = []
         Unorms = []
-        for outer_iter in range(1, outerIteration + 1):
+        for outer_iter in outers:
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
                                  + whichADMMoptimizer
@@ -225,7 +225,7 @@ for i in range(len(tuners)):
         normAxv1us = []
         primals = []
         duals = []
-        for outer_iter in range(1, outerIteration + 1):
+        for outer_iter in outers:
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
                                  + whichADMMoptimizer
@@ -378,7 +378,7 @@ for i in range(len(tuners)):
     # tune inner iterations
     elif tuners_tag == 'inner_iters':
         likelihoods = []
-        for outer_iter in range(1, outerIteration + 1):
+        for outer_iter in outers:
             logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(tuners[i]) + '_alpha=' \
                         + str(bestAlpha) + '_mlem_=False/ADMM_64/'
             logfile_name = '0_' + str(outer_iter) + '.log'
@@ -450,7 +450,7 @@ elif tuners_tag == 'outer_iters':
     plt.plot(outer_iters, likelihoods_outer, '-x')
     plt.xlabel('outer iterations')
     plt.title('likelihood')
-elif tuners_tag == 'alphas':
+elif tuners_tag == 'alphas' and len(alphas)==len(likelihoods_alpha):
     plt.figure()
     plt.plot(alphas, likelihoods_alpha, '-x')
     plt.xlabel('alpha')
