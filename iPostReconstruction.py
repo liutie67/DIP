@@ -1,7 +1,10 @@
 ## Python libraries
 
 # Useful
+import math
 from datetime import datetime
+# import queue
+import numpy as np
 
 # Local files to import
 from vDenoising import vDenoising
@@ -46,7 +49,11 @@ class iPostReconstruction(vDenoising):
      
         classResults.writeBeginningImages(self.suffix,self.image_net_input)
         classResults.writeCorruptedImage(0,self.total_nb_iter,self.image_corrupt,self.suffix,pet_algo="to fit",iteration_name="(post reconstruction)")
-        
+
+        windowSize = 100
+        patienceNum = 100
+        VARmin = math.inf
+        queueQ = []
         for epoch in range(0,self.total_nb_iter):#,self.total_nb_iter//10):
             if (epoch > 0):
                 # Train model using previously trained network (at iteration before)
@@ -71,6 +78,33 @@ class iPostReconstruction(vDenoising):
                 out_descale = self.fijii_np(net_outputs_path,shape=(self.PETImage_shape),type='<f') # loading DIP output
                 # Saving (now DESCALED) image output
                 self.save_img(out_descale, net_outputs_path)
+
+                queueQ.append(out)
+                if len(queueQ) == windowSize:
+                    mean = queueQ[0]
+                    for x in queueQ[1:windowSize]:
+                        mean += x
+                    mean = mean/windowSize
+                    VAR = np.linalg.norm(queueQ[0]-mean)
+                    for x in queueQ[1:windowSize]:
+                        VAR += np.linalg.norm(x-mean)
+                    VAR = VAR/windowSize
+                    if VAR < VARmin:
+                        VARmin = VAR
+                        xStar = out
+                    queueQ.pop(0)
+                '''
+                Q = queue.Queue()
+                if Q.qsize() < windowSize:
+                    Q.put(out)
+                elif Q.qsize() == windowSize:
+                    mean = 
+                    VAR =
+                    Q.get()
+                '''
+
+
+
 
             # Write images over epochs
             classResults.writeEndImagesAndMetrics(epoch,self.total_nb_iter,self.PETImage_shape,out_descale,self.suffix,self.phantom,self.net,pet_algo="to fit",iteration_name="(post reconstruction)")
