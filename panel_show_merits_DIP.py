@@ -5,17 +5,17 @@ from show_merits_DIP import get_recons, normalisation_DIP, plotAndSave_figures
 # from lrsDatabase import lrs0, lrs1, lrs2, lrs3, lrs4
 import Tuners
 
-dataFolderPath = '1000+MLEM1000-1+CT0+lr...*5+24'
+dataFolderPath = '2022-06-29+16-08-00+w100+p100+ADMMi100o100+lr0.04+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
 
 
 end = 1000
 step = 1
 
-lrs = tuners.lrs4 + tuners.lrs6
+lrs = [0.04]
 
 # for only one case
 IR, MSE, CRC, MA = get_recons(dataFolderPath=dataFolderPath,
-                              replicates=1,
+                              replicates='',
                               INPUT='CT',
                               skip=0,
                               lrs=lrs,
@@ -23,8 +23,8 @@ IR, MSE, CRC, MA = get_recons(dataFolderPath=dataFolderPath,
                               epoch_end=end,
                               epoch_step=step,
                               iteration=1000,
-                              scaling='nothing',
-                              opti='LBFGS'
+                              scaling='standardization',
+                              opti='Adam'
                               )
 
 cost = normalisation_DIP(IR_bkg_recon=IR,

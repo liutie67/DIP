@@ -7,7 +7,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
-from show_functions import getGT, getPhantomROI
+from show_functions import getGT, getPhantomROI, find_nan
 
 
 # Local files to import
@@ -54,7 +54,7 @@ class iPostReconstruction(vDenoising):
         classResults.writeBeginningImages(self.suffix,self.image_net_input)
         classResults.writeCorruptedImage(0,self.total_nb_iter,self.image_corrupt,self.suffix,pet_algo="to fit",iteration_name="(post reconstruction)")
 
-        windowSize = 50
+        windowSize = 100
         patienceNum = 100
         VARmin = math.inf
         VARs = []
@@ -90,7 +90,9 @@ class iPostReconstruction(vDenoising):
                 # Saving (now DESCALED) image output
                 self.save_img(out_descale, net_outputs_path)
 
-                x_out = out.detach().numpy()
+                '''
+                # x_out = find_nan(out.detach().numpy())
+                x_out = find_nan(out_descale)
                 MSE = np.mean((x_gt*getPhantomROI()-x_out*getPhantomROI())**2)
                 MSEs.append(MSE)
                 PSNR = 10*np.log((np.amax(np.abs(x_gt*getPhantomROI())))**2/MSE)
@@ -108,7 +110,7 @@ class iPostReconstruction(vDenoising):
                     VAR = VAR/windowSize
                     if VAR < VARmin:
                         VARmin = VAR
-                        xStar = out
+                        # xStar = out
                         epochStar = epoch
                         stagnate = 1
                     else:
@@ -118,12 +120,12 @@ class iPostReconstruction(vDenoising):
 
                     queueQ.pop(0)
                     VARs.append(VAR)
-                else:
-                    VARs.append(0)
+                '''
 
             # Write images over epochs
             classResults.writeEndImagesAndMetrics(epoch,self.total_nb_iter,self.PETImage_shape,out_descale,self.suffix,self.phantom,self.net,pet_algo="to fit",iteration_name="(post reconstruction)")
 
+        '''
         path_of_the_log = self.subroot+'Block2/out_cnn/' + format(self.experiment) + '/logOfDIPwithWMV.log'
         fp = open(path_of_the_log, mode='w+')
         print('Window Size = ', windowSize, file=fp)
@@ -147,7 +149,8 @@ class iPostReconstruction(vDenoising):
         fp.close()
 
         plt.figure()
-        plt.plot(VARs)
+        var_x = np.arange(windowSize, windowSize+len(VARs))
+        plt.plot(var_x, VARs)
         plt.title('Window moving variance')
         plt.savefig(self.subroot+'Block2/out_cnn/' + format(self.experiment) + '/VARs.png')
 
@@ -160,3 +163,4 @@ class iPostReconstruction(vDenoising):
         plt.plot(PSNRs)
         plt.title('Peak signal-noise ratio')
         plt.savefig(self.subroot + 'Block2/out_cnn/' + format(self.experiment) + '/PSNRs.png')
+        '''

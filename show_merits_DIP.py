@@ -12,7 +12,7 @@ path_24 = '24'
 subroot = os.getcwd() + '/data/Algo'
 image = 'image0'
 
-databasePATH_root = '/home/liutie/Documents/outputDatabase1'
+databasePATH_root = '/home/liutie/Documents/outputDatabase15'
 
 
 image_gt = getGT()
@@ -120,7 +120,7 @@ def get_recons(dataFolderPath,
                        + str(iteration) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
                        + INPUT + '_d_DD=4_k_DD=32_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
                        + '_mlem_=False.img'
-            path_img = databasePATH_root + '/' + dataFolderPath + '/24' + str(replicates) + '/' + filename
+            path_img = databasePATH_root + '/' + dataFolderPath + '/replicate_1/nested/Block2/out_cnn' + '/24' + str(replicates) + '/' + filename
 
             f = fijii_np(path_img, shape=getShape())
             IR, MSE, CRC, MA = computeThose4(f)

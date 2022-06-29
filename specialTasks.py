@@ -8,7 +8,7 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 lr = 0.04
-iter = 500
+iter = 1000
 skip = 0
 input = 'CT'
 opti = 'Adam'
@@ -24,7 +24,7 @@ specialTask(DIP_special=True,
             opti_special=[opti],
             scaling_special=[scaling],
             threads=[thread])
-moveALL('+ADMMi100o100+lr' + str(lr)
+moveALL('+w100+p100+ADMMi100o100+lr' + str(lr)
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
