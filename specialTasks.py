@@ -8,11 +8,12 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 lr = 0.04
-iter = 400
+iter = 500
 skip = 0
 input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
+thread = 64
 
 initialALL()
 specialTask(DIP_special=True,
@@ -21,10 +22,13 @@ specialTask(DIP_special=True,
             skip_special=[skip],
             input_special=[input],
             opti_special=[opti],
-            scaling_special=[scaling],)
+            scaling_special=[scaling],
+            threads=[thread])
 moveALL('+ADMMi100o100+lr' + str(lr)
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
         + '+opti' + opti
-        + '+scaling' + scaling)
+        + '+scaling' + scaling
+        + '+t' + str(thread)
+        )
