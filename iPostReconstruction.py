@@ -53,7 +53,7 @@ class iPostReconstruction(vDenoising):
      
         classResults.writeBeginningImages(self.suffix,self.image_net_input)
         classResults.writeCorruptedImage(0,self.total_nb_iter,self.image_corrupt,self.suffix,pet_algo="to fit",iteration_name="(post reconstruction)")
-
+        '''
         windowSize = 100
         patienceNum = 100
         VARmin = math.inf
@@ -65,6 +65,7 @@ class iPostReconstruction(vDenoising):
         stagnate = 0
         success = False
         epochStar = -1
+        '''
         for epoch in range(0,self.total_nb_iter):#,self.total_nb_iter//10):
             if (epoch > 0):
                 # Train model using previously trained network (at iteration before)

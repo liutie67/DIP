@@ -6,7 +6,7 @@ from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhan
 
 
 databaseNum = 15
-dataFolderPath = '2022-06-29+16-19-07+w100+p100+ADMMi100o100+lr0.04+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
+dataFolderPath = '2022-06-30+10-38-28+wx+px+MLEM1000+lr0.04+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
 
 lr = 0.04
 opti = 'Adam'
@@ -73,18 +73,26 @@ plt.figure()
 var_x = np.arange(windowSize, windowSize+len(VARs))
 plt.plot(var_x, VARs, '.')
 plt.title('Window moving variance - epochStar=' + str(epochStar))
+plt.axvline(x=epochStar+1, c="r")
+plt.axhline(y=np.min(VARs), c="g", linewidth=0.5)
 plt.savefig(getDataFolderPath(databaseNum, dataFolderPath)
             + '/VARs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+# constantYs = np.linspace(np.min(VARs), np.max(VARs), 100)
 
 plt.figure()
 plt.plot(MSEs, '.')
 plt.title('Mean square error - epochStar=' + str(epochStar))
+plt.axvline(x=epochStar+1, c="r")
+plt.axhline(y=np.min(MSEs), c="g", linewidth=0.5)
 plt.savefig(getDataFolderPath(databaseNum, dataFolderPath)
             + '/MSEs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+
 
 plt.figure()
 plt.plot(PSNRs, '.')
 plt.title('Peak signal-noise ratio - epochStar=' + str(epochStar))
+plt.axvline(x=epochStar+1, c="r")
+plt.axhline(y=np.max(PSNRs), c="g", linewidth=0.5)
 plt.savefig(getDataFolderPath(databaseNum, dataFolderPath)
             + '/PSNRs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
 

@@ -15,6 +15,7 @@ opti = 'Adam'
 scaling = 'standardization'
 thread = 64
 
+
 initialALL()
 specialTask(DIP_special=True,
             lr_special=[lr],
@@ -24,7 +25,7 @@ specialTask(DIP_special=True,
             opti_special=[opti],
             scaling_special=[scaling],
             threads=[thread])
-moveALL('+w100+p100+ADMMi100o100+lr' + str(lr)
+moveALL('+wx+px+MLEM1000+lr' + str(lr)
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
