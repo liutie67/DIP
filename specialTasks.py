@@ -1,3 +1,5 @@
+import time
+
 from main import specialTask
 import Tuners
 
@@ -13,24 +15,28 @@ skip = 0
 input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
-thread = 64
-optimizer = 'MLEM1000'
+thread = 128
+optimizer = 'ADMMadpATi1o100*100a1'
 
 initialALL()
+timerStart = time.perf_counter()
 specialTask(DIP_special=True,
-            lr_special=Tuners.lrs0,
+            lr_special=Tuners.lrs1,
             sub_iter_special=[iter],
             skip_special=[skip],
             input_special=[input],
             opti_special=[opti],
             scaling_special=[scaling],
             threads=[thread])
+timerEnd = time.perf_counter()
 moveALL('+wx+px+' + optimizer
-        + '+lr=lrs0'
+        + '+lr=lrs1'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
         + '+opti' + opti
         + '+scaling' + scaling
         + '+t' + str(thread)
+        + '+' + str(int(timerEnd - timerStart)) + 's',
+        dtnBase=15
         )

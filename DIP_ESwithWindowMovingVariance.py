@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-for lr in Tuners.lrs0:
+lrs = Tuners.lrs1
+for lr in lrs:
     databaseNum = 15
-    dataFolderPath = '2022-06-30+11-03-32+wx+px+MLEM1000+lr=lrs0+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
+    dataFolderPath = '2022-06-30+14-26-41+wx+px+ADMMi100o100a0.005+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+248s'
 
     # lr = Tuners[0]
     opti = 'Adam'
@@ -73,29 +74,30 @@ for lr in Tuners.lrs0:
     plt.figure()
     var_x = np.arange(windowSize, windowSize+len(VARs))
     plt.plot(var_x, VARs, '.')
-    plt.title('Window moving variance - epochStar=' + str(epochStar))
+    plt.title('Window Moving Variance,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(x=epochStar+1, c="r")
     plt.axhline(y=np.min(VARs), c="g", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
-                + '/VARs') + '/lr' + str(lr) + '+VARs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
-    # constantYs = np.linspace(np.min(VARs), np.max(VARs), 100)
+                + '/VARs') + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+VARs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+    plt.close()
 
     plt.figure()
     plt.plot(MSEs, '.')
-    plt.title('Mean square error - epochStar=' + str(epochStar))
+    plt.title('MSE,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(x=epochStar+1, c="r")
     plt.axhline(y=np.min(MSEs), c="g", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
-                + '/MSEs') + '/lr' + str(lr) + '+MSEs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
-
+                + '/MSEs') + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+MSEs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+    plt.close()
 
     plt.figure()
     plt.plot(PSNRs, '.')
-    plt.title('Peak signal-noise ratio - epochStar=' + str(epochStar))
+    plt.title('PSNR,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(x=epochStar+1, c="r")
     plt.axhline(y=np.max(PSNRs), c="g", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
-                + '/PSNRs') + '/lr' + str(lr) + '+PSNRs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+                + '/PSNRs') + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+PSNRs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+    plt.close()
 
 # plt.show()
 
