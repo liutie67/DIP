@@ -84,6 +84,8 @@ def mkdir(path):
     if not folder:
         os.makedirs(path)
 
+    return path
+
 def dldir(path):
     folder = os.path.exists(path)
     if folder:

@@ -1,1 +1,6 @@
-config_rho=0_lr=0.04_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=0.0001_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=0.001_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=1_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=10_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=0.1_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=0.01_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False

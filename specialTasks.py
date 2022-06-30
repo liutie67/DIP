@@ -14,18 +14,19 @@ input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 64
-
+optimizer = 'MLEM1000'
 
 initialALL()
 specialTask(DIP_special=True,
-            lr_special=[lr],
+            lr_special=Tuners.lrs0,
             sub_iter_special=[iter],
             skip_special=[skip],
             input_special=[input],
             opti_special=[opti],
             scaling_special=[scaling],
             threads=[thread])
-moveALL('+wx+px+MLEM1000+lr' + str(lr)
+moveALL('+wx+px+' + optimizer
+        + '+lr=lrs0'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input

@@ -6,9 +6,9 @@ from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhan
 
 
 databaseNum = 15
-dataFolderPath = '2022-06-30+10-38-28+wx+px+MLEM1000+lr0.04+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
+dataFolderPath = '2022-06-30+11-03-32+wx+px+MLEM1000+lr=lrs0+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t64'
 
-lr = 0.04
+lr = 0.01
 opti = 'Adam'
 skip = 0
 scaling = 'standardization'
@@ -18,7 +18,7 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-epoches = range(300,400)
+epoches = range(250,350)
 flag = 1
 for epoch in epoches:
     filename = 'out_DIP_post_reco_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
