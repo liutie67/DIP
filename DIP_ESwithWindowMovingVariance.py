@@ -36,7 +36,7 @@ for lr in lrs:
         queueQ.append(x0)
     '''
     x_gt = getGT()
-    # stagnate = 0
+    stagnate = 0
     success = False
     epochStar = -1
     for epoch in range(sub_iter):
