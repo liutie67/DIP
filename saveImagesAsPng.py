@@ -20,7 +20,7 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-lrs = Tuners.lrs1[10:12]
+lrs = Tuners.lrs1[13:14]
 epoches = range(sub_iter)
 
 
@@ -49,8 +49,9 @@ for lr in lrs:
         processNum += 1
         if processNum % 5 == 0:
             print('Processing: ' + str(format((processNum/processPercentage)*100, '.2f')) + '% finished\t', end='')
-            minute = int(((processPercentage - processNum)/(1/(timeEnd - timeStart)))/60)
-            second = int(((processPercentage - processNum)/(1/(timeEnd - timeStart))) % 60)
+            minute = int(((processPercentage - processNum)/(5/(timeEnd - timeStart)))/60)
+            second = int(((processPercentage - processNum)/(5/(timeEnd - timeStart))) % 60)
             print('estimated time left: ' + str(minute) + ' min ' + str(second) + 's')
+            timeStart = time.perf_counter()
 
-        timeStart = time.perf_counter()
+
