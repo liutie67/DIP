@@ -7,7 +7,7 @@ from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhan
 
 
 databaseNum = 15
-dataFolderPath = '2022-06-30+14-49-47+wx+px+ADMMadpATi100o30a1+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+246s'
+dataFolderPath = '2022-06-30+15-42-21+wx+px+ADMMadpATi1o100*100a1+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+257s'
 
 # lr = 0.01
 opti = 'Adam'
@@ -19,7 +19,7 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-lrs = Tuners.lrs1[4:7]
+lrs = Tuners.lrs1[4:8]
 epoches = range(250, 450)
 
 
