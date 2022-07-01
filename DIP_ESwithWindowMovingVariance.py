@@ -5,25 +5,29 @@ import matplotlib.pyplot as plt
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
+databaseNum = 15
+dataFolderPath = '2022-06-30+14-26-41+wx+px+ADMMi100o100a0.005+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+248s'
+
+# lr = Tuners[0]
+opti = 'Adam'
+skip = 0
+scaling = 'standardization'
+INPUT = 'CT'
+
+inner_iter = 50
+alpha = 0.084
+sub_iter = 1000
+
+windowSize = 100
+patienceNum = 100
+
 lrs = Tuners.lrs1
 # lrs = [0.004]
 SHOW = (len(lrs) == 1)
+
+processPercentage = sub_iter*len(lrs)
+processNum = 0
 for lr in lrs:
-    databaseNum = 15
-    dataFolderPath = '2022-06-30+14-26-41+wx+px+ADMMi100o100a0.005+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+248s'
-
-    # lr = Tuners[0]
-    opti = 'Adam'
-    skip = 0
-    scaling = 'standardization'
-    INPUT = 'CT'
-
-    inner_iter = 50
-    alpha = 0.084
-    sub_iter = 1000
-
-    windowSize = 20
-    patienceNum = 20
     VARmin = math.inf
     VARs = []
     MSEs = []
@@ -72,6 +76,10 @@ for lr in lrs:
                 success = True
             queueQ.pop(0)
             VARs.append(VAR)
+
+        processNum += 1
+        if processNum%50 == 0:
+            print('Processing: ' + str(format((processNum/processPercentage)*100, '.2f')) + '% finished')
 
     plt.figure()
     var_x = np.arange(windowSize, windowSize+len(VARs))
