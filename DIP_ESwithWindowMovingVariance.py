@@ -11,7 +11,7 @@ from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhan
 
 databaseNum = 15
 dataFolderPath = '2022-06-30+14-26-41+wx+px+ADMMi100o100a0.005+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+248s'
-additionalTitle = ''
+additionalTitle = 'ADMM,i100,o100,a0.005'
 
 # lr = Tuners[0]
 opti = 'Adam'
@@ -140,10 +140,10 @@ for lr in lrs:
         plt.close()
 
     fig, ax1 = plt.subplots()
-    fig.subplots_adjust(right=0.84, left=0.09)
+    fig.subplots_adjust(right=0.8, left=0.1, bottom=0.12)
     ax2 = ax1.twinx()
     ax3 = ax1.twinx()
-    ax2.spines.right.set_position(("axes", 1.125))
+    ax2.spines.right.set_position(("axes", 1.18))
     p1, = ax1.plot(PSNRs, "r", label="PSNR")
     p2, = ax2.plot(var_x, VARs, "b", label="WMV")
     p3, = ax3.plot(SSIMs, "orange", label="SSIM")
@@ -166,7 +166,10 @@ for lr in lrs:
     ax1.axvline(epochStar, c='g', linewidth=1)
     ax1.axvline(windowSize-1, c='g', linewidth=1, ls='--')
     ax1.axvline(epochStar+patienceNum-1, c='g', lw=1, ls='--')
-    plt.xticks([epochStar, 0, sub_iter - 1, windowSize-1, epochStar+patienceNum-1], [str(epochStar) + '\nES point', 0, sub_iter - 1, windowSize, epochStar+patienceNum], color='green')
+    if epochStar+patienceNum-1 > epochStar:
+        plt.xticks([epochStar, 0, sub_iter - 1, windowSize-1, epochStar+patienceNum-1], ['' + str(epochStar) + '    \nES point', 0, sub_iter - 1, str(windowSize), '     +' + str(patienceNum)], color='green', fontsize=7)
+    else:
+        plt.xticks([epochStar, 0, sub_iter - 1, windowSize-1], [' \n' + str(epochStar) + ' \nES point', 0, sub_iter - 1, str(windowSize)], color='green')
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                       + '/combined/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+combined-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
