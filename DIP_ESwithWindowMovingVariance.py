@@ -23,11 +23,11 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-windowSize = 100
-patienceNum = 100
+windowSize = 20
+patienceNum = 20
 
 lrs = Tuners.lrs1
-lrs = [0.004]
+# lrs = [0.004]
 SHOW = (len(lrs) == 1)
 
 processPercentage = sub_iter * len(lrs)
