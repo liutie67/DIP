@@ -20,8 +20,8 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-windowSize = 100
-patienceNum = 100
+windowSize = 20
+patienceNum = 20
 
 lrs = Tuners.lrs1
 # lrs = [0.004]
@@ -85,34 +85,50 @@ for lr in lrs:
 
     plt.figure()
     var_x = np.arange(windowSize, windowSize+len(VARs))
-    plt.plot(var_x, VARs)
+    plt.plot(var_x, VARs, 'b')
     plt.title('Window Moving Variance,epoch*=' + str(epochStar) + ',lr=' + str(lr))
-    plt.axvline(x=epochStar+1, c="r")
-    plt.axhline(y=np.min(VARs), c="g", linewidth=0.5)
+    plt.axvline(epochStar+1, c='g')
+    plt.axhline(y=np.min(VARs), c="black", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                 + '/VARs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+VARs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
         plt.close()
 
     plt.figure()
-    plt.plot(MSEs)
+    plt.plot(MSEs, 'y')
     plt.title('MSE,epoch*=' + str(epochStar) + ',lr=' + str(lr))
-    plt.axvline(x=epochStar+1, c="r")
-    plt.axhline(y=np.min(MSEs), c="g", linewidth=0.5)
+    plt.axvline(epochStar+1, c='g')
+    plt.axhline(y=np.min(MSEs), c="black", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                 + '/MSEs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+MSEs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
         plt.close()
 
     plt.figure()
-    plt.plot(PSNRs)
+    plt.plot(PSNRs, 'r')
     plt.title('PSNR,epoch*=' + str(epochStar) + ',lr=' + str(lr))
-    plt.axvline(x=epochStar+1, c="r")
-    plt.axhline(y=np.max(PSNRs), c="g", linewidth=0.5)
+    plt.axvline(epochStar+1, c='g')
+    plt.axhline(y=np.max(PSNRs), c="black", linewidth=0.5)
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                 + '/PSNRs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+PSNRs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
         plt.close()
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.plot(PSNRs, 'r')
+    plt.title('epoch*=' + str(epochStar) + ',lr=' + str(lr))
+    ax1.set_ylabel('Peak Signal-noise ration', color='r')
+    ax2 = ax1.twinx()
+    ax2.plot(var_x, VARs, 'b')
+    ax2.set_ylabel('Window-Moving vatriance', color='b')
+    plt.xlabel('sub iterations')
+    plt.axvline(epochStar+1, c='g')
+    plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
+                + '/combined/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(lrs.index(lr)) + '-lr' + str(lr) + '+combined-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
+    if not SHOW:
+        plt.close()
+
 
 if SHOW:
     plt.show()
