@@ -9,8 +9,8 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 15
-dataFolderPath = '2022-06-30+14-26-41+wx+px+ADMMi100o100a0.005+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+248s'
+databaseNum = 16
+dataFolderPath = '2022-07-04+17-18-15+ADMMi100o100a0.005+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+253s'
 additionalTitle = 'ADMM,i100,o100,a0.005'
 
 # lr = Tuners[0]
@@ -23,10 +23,10 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-windowSize = 20
-patienceNum = 20
+windowSize = 200
+patienceNum = 100
 
-lrs = Tuners.lrs1
+lrs = Tuners.lrs2
 # lrs = [0.004]
 SHOW = (len(lrs) == 1)
 
@@ -92,7 +92,7 @@ for lr in lrs:
 
     plt.figure()
     var_x = np.arange(windowSize, windowSize + len(VARs))
-    plt.plot(var_x, VARs, 'b')
+    plt.plot(var_x, VARs, 'r')
     plt.title('Window Moving Variance,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(epochStar, c='g')
     plt.xticks([epochStar, 0, sub_iter-1], [epochStar, 0, sub_iter-1], color='green')
@@ -116,7 +116,7 @@ for lr in lrs:
         plt.close()
 
     plt.figure()
-    plt.plot(PSNRs, 'r')
+    plt.plot(PSNRs)
     plt.title('PSNR,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(epochStar, c='g')
     plt.xticks([epochStar, 0, sub_iter - 1], [epochStar, 0, sub_iter - 1], color='green')
@@ -143,9 +143,11 @@ for lr in lrs:
     fig.subplots_adjust(right=0.8, left=0.1, bottom=0.12)
     ax2 = ax1.twinx()
     ax3 = ax1.twinx()
+    ax4 = ax1.twinx()
     ax2.spines.right.set_position(("axes", 1.18))
-    p1, = ax1.plot(PSNRs, "r", label="PSNR")
-    p2, = ax2.plot(var_x, VARs, "b", label="WMV")
+    p4, = ax4.plot(MSEs, "y", label="MSE")
+    p1, = ax1.plot(PSNRs, label="PSNR")
+    p2, = ax2.plot(var_x, VARs, "r", label="WMV")
     p3, = ax3.plot(SSIMs, "orange", label="SSIM")
     ax1.set_xlim(0, sub_iter-1)
     plt.title(additionalTitle + ' lr=' + str(lr))
@@ -153,6 +155,7 @@ for lr in lrs:
     ax1.set_ylabel("Peak Signal-Noise ratio")
     ax2.set_ylabel("Window-Moving variance")
     ax3.set_ylabel("Structural similarity")
+    ax4.yaxis.set_visible(False)
     ax1.yaxis.label.set_color(p1.get_color())
     ax2.yaxis.label.set_color(p2.get_color())
     ax3.yaxis.label.set_color(p3.get_color())
@@ -162,14 +165,14 @@ for lr in lrs:
     ax2.tick_params(axis='y', colors=p2.get_color(), **tkw)
     ax3.tick_params(axis='y', colors=p3.get_color(), **tkw)
     ax1.tick_params(axis='x', **tkw)
-    ax1.legend(handles=[p1, p3, p2])
-    ax1.axvline(epochStar, c='g', linewidth=1)
-    ax1.axvline(windowSize-1, c='g', linewidth=1, ls='--')
-    ax1.axvline(epochStar+patienceNum-1, c='g', lw=1, ls='--')
+    ax1.legend(handles=[p1, p3, p2, p4])
+    ax1.axvline(epochStar, c='g', linewidth=1, ls='--')
+    ax1.axvline(windowSize-1, c='g', linewidth=1, ls=':')
+    ax1.axvline(epochStar+patienceNum-1, c='g', lw=1, ls=':')
     if epochStar+patienceNum-1 > epochStar:
-        plt.xticks([epochStar, 0, sub_iter - 1, windowSize-1, epochStar+patienceNum-1], ['' + str(epochStar) + '    \nES point', 0, sub_iter - 1, str(windowSize), '     +' + str(patienceNum)], color='green', fontsize=7)
+        plt.xticks([epochStar, windowSize-1, epochStar+patienceNum-1], ['\n' + str(epochStar) + '\nES point', str(windowSize), '+' + str(patienceNum)], color='green')
     else:
-        plt.xticks([epochStar, 0, sub_iter - 1, windowSize-1], [' \n' + str(epochStar) + ' \nES point', 0, sub_iter - 1, str(windowSize)], color='green')
+        plt.xticks([epochStar, windowSize-1], ['\n' + str(epochStar) + '\nES point', str(windowSize)], color='green')
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                       + '/combined/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+combined-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')

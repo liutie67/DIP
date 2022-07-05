@@ -7,8 +7,8 @@ import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
 
-databaseNum = 15
-dataFolderPath = '2022-06-30+15-42-21+wx+px+ADMMadpATi1o100*100a1+lr=lrs1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+257s'
+databaseNum = 16
+dataFolderPath = '2022-07-04+17-18-15+ADMMi100o100a0.005+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+253s'
 
 # lr = 0.01
 opti = 'Adam'
@@ -20,8 +20,8 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-lrs = Tuners.lrs1[4:6+1]
-epoches = range(250, 400)
+lrs = Tuners.lrs2[13:14+1]
+epoches = range(sub_iter)
 
 
 processPercentage = len(epoches)*len(lrs)
