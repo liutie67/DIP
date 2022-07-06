@@ -6,11 +6,9 @@ import time
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-
 databaseNum = 16
-dataFolderPath = '2022-07-04+17-18-15+ADMMi100o100a0.005+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+253s'
+dataFolderPath = '2022-07-06+13-28-04+ADMMadpATtau2mu1i100o20a1+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+254s'
 
-# lr = 0.01
 opti = 'Adam'
 skip = 0
 scaling = 'standardization'
@@ -20,8 +18,8 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-lrs = Tuners.lrs2[13:14+1]
-epoches = range(sub_iter)
+lrs = Tuners.lrs2
+epoches = range(50, 350)
 
 
 processPercentage = len(epoches)*len(lrs)
@@ -37,20 +35,21 @@ for lr in lrs:
 
         x_out = fijii_np(path_img, shape=getShape())
 
-        plt.figure()
+        plt.figure(1)
         plt.imshow(x_out, cmap='gray_r', vmin=0, vmax=500)
         plt.title('epoch ' + str(epoch))
         plt.colorbar()
 
         plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/processImages/lr' + str(lr)) + '/epoch' + str(epoch) + '.png')
-        plt.close()
+        plt.clf()
 
         timeEnd = time.perf_counter()
         processNum += 1
         if processNum % 5 == 0:
             print('Processing: ' + str(format((processNum/processPercentage)*100, '.2f')) + '% finished\t', end='')
-            minute = int(((processPercentage - processNum)/(5/(timeEnd - timeStart)))/60)
-            second = int(((processPercentage - processNum)/(5/(timeEnd - timeStart))) % 60)
+            v = 5/(timeEnd - timeStart)
+            minute = int(((processPercentage - processNum)/v)/60)
+            second = int(((processPercentage - processNum)/v) % 60)
             print('estimated time left: ' + str(minute) + ' min ' + str(second) + 's')
             timeStart = time.perf_counter()
 

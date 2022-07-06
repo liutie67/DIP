@@ -10,10 +10,9 @@ import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
 databaseNum = 16
-dataFolderPath = '2022-07-04+17-18-15+ADMMi100o100a0.005+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+253s'
-additionalTitle = 'ADMM,i100,o100,a0.005'
+dataFolderPath = '2022-07-06+13-28-04+ADMMadpATtau2mu1i100o20a1+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+254s'
+additionalTitle = 'ADMMadpATtau2mu1i100o20a1'
 
-# lr = Tuners[0]
 opti = 'Adam'
 skip = 0
 scaling = 'standardization'
@@ -23,7 +22,7 @@ inner_iter = 50
 alpha = 0.084
 sub_iter = 1000
 
-windowSize = 200
+windowSize = 10
 patienceNum = 100
 
 lrs = Tuners.lrs2
@@ -90,7 +89,7 @@ for lr in lrs:
         if processNum % 50 == 0:
             print('Processing: ' + str(format((processNum / processPercentage) * 100, '.2f')) + '% finished')
 
-    plt.figure()
+    plt.figure(1)
     var_x = np.arange(windowSize, windowSize + len(VARs))
     plt.plot(var_x, VARs, 'r')
     plt.title('Window Moving Variance,epoch*=' + str(epochStar) + ',lr=' + str(lr))
@@ -101,9 +100,9 @@ for lr in lrs:
                       + '/VARs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+VARs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
-        plt.close()
+        plt.clf()
 
-    plt.figure()
+    plt.figure(2)
     plt.plot(MSEs, 'y')
     plt.title('MSE,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(epochStar, c='g')
@@ -113,9 +112,9 @@ for lr in lrs:
                       + '/MSEs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+MSEs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
-        plt.close()
+        plt.clf()
 
-    plt.figure()
+    plt.figure(3)
     plt.plot(PSNRs)
     plt.title('PSNR,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(epochStar, c='g')
@@ -125,9 +124,9 @@ for lr in lrs:
                       + '/PSNRs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+PSNRs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
-        plt.close()
+        plt.clf()
 
-    plt.figure()
+    plt.figure(4)
     plt.plot(SSIMs, c='orange')
     plt.title('SSIM,epoch*=' + str(epochStar) + ',lr=' + str(lr))
     plt.axvline(epochStar, c='g')
@@ -137,7 +136,7 @@ for lr in lrs:
                       + '/SSIMs' + '/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+SSIMs-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
-        plt.close()
+        plt.clf()
 
     fig, ax1 = plt.subplots()
     fig.subplots_adjust(right=0.8, left=0.1, bottom=0.12)
@@ -168,16 +167,16 @@ for lr in lrs:
     ax1.legend(handles=[p1, p3, p2, p4])
     ax1.axvline(epochStar, c='g', linewidth=1, ls='--')
     ax1.axvline(windowSize-1, c='g', linewidth=1, ls=':')
-    ax1.axvline(epochStar+patienceNum-1, c='g', lw=1, ls=':')
-    if epochStar+patienceNum-1 > epochStar:
-        plt.xticks([epochStar, windowSize-1, epochStar+patienceNum-1], ['\n' + str(epochStar) + '\nES point', str(windowSize), '+' + str(patienceNum)], color='green')
+    ax1.axvline(epochStar+patienceNum, c='g', lw=1, ls=':')
+    if epochStar+patienceNum > epochStar:
+        plt.xticks([epochStar, windowSize-1, epochStar+patienceNum], ['\n' + str(epochStar) + '\nES point', str(windowSize), '+' + str(patienceNum)], color='green')
     else:
         plt.xticks([epochStar, windowSize-1], ['\n' + str(epochStar) + '\nES point', str(windowSize)], color='green')
     plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath)
                       + '/combined/w' + str(windowSize) + 'p' + str(patienceNum)) + '/' + str(
         lrs.index(lr)) + '-lr' + str(lr) + '+combined-w' + str(windowSize) + 'p' + str(patienceNum) + '.png')
     if not SHOW:
-        plt.close()
+        plt.clf()
 
 if SHOW:
     plt.show()

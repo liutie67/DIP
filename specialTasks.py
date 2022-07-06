@@ -15,7 +15,7 @@ input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-optimizer = 'ADMMi100o100a0.005'
+optimizer = 'ADMMadpATtau2mu1i100o80a1'
 
 initialALL()
 timerStart = time.perf_counter()
