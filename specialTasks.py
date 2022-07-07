@@ -10,17 +10,17 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 iter = 1000
-skip = 0
+skip = 3
 input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-optimizer = 'ADMMadpATtau2mu1i100o80a1'
+optimizer = 'ADMMi100o100a0.005'
 
 initialALL()
 timerStart = time.perf_counter()
 specialTask(DIP_special=True,
-            lr_special=Tuners.lrs2,
+            lr_special=Tuners.lrs1,
             sub_iter_special=[iter],
             skip_special=[skip],
             input_special=[input],
@@ -29,7 +29,7 @@ specialTask(DIP_special=True,
             threads=[thread])
 timerEnd = time.perf_counter()
 moveALL('+' + optimizer
-        + '+lr=lrs2'
+        + '+lr=lrs1'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
@@ -37,5 +37,5 @@ moveALL('+' + optimizer
         + '+scaling' + scaling
         + '+t' + str(thread)
         + '+' + str(int(timerEnd - timerStart)) + 's',
-        dtnBase=16
+        dtnBase=17
         )

@@ -9,12 +9,12 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 16
-dataFolderPath = '2022-07-06+13-28-04+ADMMadpATtau2mu1i100o20a1+lr=lrs2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+254s'
-additionalTitle = 'ADMMadpATtau2mu1i100o20a1'
+databaseNum = 17
+dataFolderPath = '2022-07-06+16-33-56+ADMMi100o100a0.005+lr=lrs1+iter1000+skip3+inputCT+optiAdam+scalingstandardization+t128+295s'
+additionalTitle = 'ADMMi100o100a0.005 skip3'
 
 opti = 'Adam'
-skip = 0
+skip = 3
 scaling = 'standardization'
 INPUT = 'CT'
 
@@ -25,7 +25,7 @@ sub_iter = 1000
 windowSize = 10
 patienceNum = 100
 
-lrs = Tuners.lrs2
+lrs = Tuners.lrs1
 # lrs = [0.004]
 SHOW = (len(lrs) == 1)
 
