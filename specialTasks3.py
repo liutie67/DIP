@@ -10,7 +10,7 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 lr = 0.006
-iter = 10
+iter = 185
 skip = 0
 input = 'CT'
 opti = 'Adam'
@@ -18,8 +18,8 @@ scaling = 'standardization'
 thread = 128
 optimizer = 'nested'
 
-globalIter = 1
-rho = 1e-4
+globalIter = 5
+rho = 1e-3
 
 initialALL()
 timerStart = time.perf_counter()

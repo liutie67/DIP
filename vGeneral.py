@@ -499,7 +499,7 @@ class vGeneral(abc.ABC):
             pnlt = ' -pnlt ' + penalty + ':' + self.subroot_data + method + '_MRF.conf'
             penaltyStrength = ' -pnlt-beta ' + str(self.beta)
         elif (method == 'nested'):
-            opti = ' -opti ADMMLim' + ',' + str(self.alpha)
+            opti = ' -opti ADMMLim_adaptiveRho' + ',' + str(self.alpha) + ',1,2,1'
             pnlt = ' -pnlt DIP_ADMM'
             '''
             if (i==0): # For first iteration, put rho to zero
