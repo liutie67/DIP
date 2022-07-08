@@ -5,10 +5,10 @@ import Tuners
 # ----------------------------------------------------------------------------------------------------------------------
 SHOW = True  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ----------------------------------------------------------------------------------------------------------------------
-outputDatabaseNb = 14  # remember to change _squreNorm
-dataFolderPath = '->-1-2022-06-22+17-20-49+2r+new3norms+adpAT+i1+o100*100+t128+a=alphas0+mu1+tau2'
+outputDatabaseNb = '18'  # remember to change _squreNorm
+dataFolderPath = '2022-07-07+18-48-19+2r+new3norms+AdpAT+i1+o100*100+t128+a=alpha0+mu1+tau2'
 # ----------------------------------------------------------------------------------------------------------------------
-whichADMMoptimizer = Tuners.ADMMoptimizerName[4]
+whichADMMoptimizer = Tuners.ADMMoptimizerName[2]
 #                            0                   1                      2                            3                            4
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx']
 # ----------------------------------------------------------------------------------------------------------------------
@@ -18,13 +18,13 @@ OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters', 'calculateDiffC
 tuners_tag = OPTION[option]
 # ----------------------------------------------------------------------------------------------------------------------
 innerIteration = 1
-outerIteration = 2000
+outerIteration = 100*100
 # ----------------------------------------------------------------------------------------------------------------------
-ALPHAS = Tuners.alphas0
+ALPHAS = [1]
 # ----------------------------------------------------------------------------------------------------------------------
 # calculate difference curves parameters
 inners = list(range(innerIteration))
-outers = list(range(0, outerIteration+1))
+outers = list(range(1, outerIteration+1))
 alpha = Tuners.alphas0[0]
 MODEL = 'max'
 TOGETHER = False

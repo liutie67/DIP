@@ -33,7 +33,7 @@ print("max 2 = " ,np.max(img2_np))
 
 plt.figure()
 #plt.imshow(np.abs(img1_np - img2_np), cmap='gray_r')
-plt.imshow(img1_np - img2_np, cmap='bwr')#,vmin=-5000, vmax=5000)
+plt.imshow(img1_np - img2_np, cmap='bwr', vmin=-5000, vmax=5000)
 plt.title('absolute difference between img1 and img2')
 plt.colorbar()
 plt.savefig(root+'diff_img.png')

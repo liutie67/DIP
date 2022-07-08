@@ -19,8 +19,10 @@ optimizer = 'ADMMi100o100a0.005'
 
 initialALL()
 timerStart = time.perf_counter()
-specialTask(DIP_special=True,
-            lr_special=Tuners.lrs1,
+specialTask(method_special='nested',
+            max_iter=[5],
+            DIP_special=True,
+            lr_special=[0.006],
             sub_iter_special=[iter],
             skip_special=[skip],
             input_special=[input],
