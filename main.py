@@ -50,7 +50,7 @@ def specialTask(method_special='nested',
         "debug" : False, # Debug mode = run without raytune and with one iteration
         "max_iter" : tune.grid_search(max_iter), # Number of global iterations for usual optimizers (MLEM, BSREM, AML etc.) and for nested
         "nb_subsets" : tune.grid_search(nb_subsets), # Number of subsets in chosen reconstruction algorithm (automatically set to 1 for ADMMLim)
-        "finetuning" : tune.grid_search(['last']),
+        "finetuning" : tune.grid_search(['last']), # 'false' for randomly initialize the network again
         "experiment" : tune.grid_search([24]),
         "image_init_path_without_extension" : tune.grid_search(['1_im_value_cropped']), # Initial image of the reconstruction algorithm (taken from data/algo/Data/initialization)
         #"f_init" : tune.grid_search(['1_im_value_cropped']),
