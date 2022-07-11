@@ -538,8 +538,8 @@ class vGeneral(abc.ABC):
                 tau = 100
                 method = ADMMoptimizerName[2]
             elif method == ADMMoptimizerName[4]:
-                mu = 50
-                tau = 100
+                mu = 1
+                tau = 2
                 method = ADMMoptimizerName[2]
             xi = 1
             opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)

@@ -8,9 +8,12 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx'] #
 #                            0                  1                       2                           3                             4               #
+admmInner = 1
+admmOuter = 800
+admmAlpha = 1
 
 lr = 0.006
-iter = 185
+iter = 200
 skip = 0
 input = 'CT'
 opti = 'Adam'
@@ -21,8 +24,9 @@ optimizer = 'nested'
 globalIter = 5
 rho = 1e-3
 
-initialALL()
 timerStart = time.perf_counter()
+'''
+initialALL()
 specialTask(method_special=optimizer,
             max_iter=[globalIter],
             replicates_special=1,
@@ -32,12 +36,13 @@ specialTask(method_special=optimizer,
             skip_special=[skip],
             scaling_special=[scaling],
             input_special=[input],
-            inner_special=[1],
-            outer_special=[800],
-            alpha_special=[1],
+            inner_special=[admmInner],
+            outer_special=[admmOuter],
+            alpha_special=[admmAlpha],
             rho_special=[rho],
             nb_subsets=[28],
             threads=[thread])
+'''
 timerEnd = time.perf_counter()
 
 moveALL('+' + optimizer
