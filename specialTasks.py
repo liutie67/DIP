@@ -10,7 +10,7 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 iter = 1000
-skip = 3
+skip = 0
 input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
