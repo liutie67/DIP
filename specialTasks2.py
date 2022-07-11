@@ -15,12 +15,11 @@ input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-optimizer = 'ADMMi100o100a0.005'
+optimizer = 'admm5+adpAT+a1+i1o2000'
 
 initialALL()
 timerStart = time.perf_counter()
 specialTask(method_special='nested',
-            max_iter=[5],
             DIP_special=True,
             lr_special=[0.006],
             sub_iter_special=[iter],
@@ -30,8 +29,8 @@ specialTask(method_special='nested',
             scaling_special=[scaling],
             threads=[thread])
 timerEnd = time.perf_counter()
-moveALL('+' + optimizer
-        + '+lr=lrs1'
+moveALL('+dip5+' + optimizer
+        + '+lr=0.006'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
@@ -39,7 +38,7 @@ moveALL('+' + optimizer
         + '+scaling' + scaling
         + '+t' + str(thread)
         + '+' + str(int(timerEnd - timerStart)) + 's',
-        dtnBase=17
+        dtnBase=20
         )
 
 

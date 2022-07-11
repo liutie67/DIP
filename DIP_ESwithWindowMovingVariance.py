@@ -9,12 +9,12 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 17
-dataFolderPath = '2022-07-06+16-33-56+ADMMi100o100a0.005+lr=lrs1+iter1000+skip3+inputCT+optiAdam+scalingstandardization+t128+295s'
-additionalTitle = 'ADMMi100o100a0.005 skip3'
+databaseNum = 20
+dataFolderPath = '2022-07-11+16-27-08+dip5+admm5+adpAT+a1+i1o2000+lr=0.006+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+196s'
+additionalTitle = 'admm5+adpAT+a1+i1o2000'
 
 opti = 'Adam'
-skip = 3
+skip = 0
 scaling = 'standardization'
 INPUT = 'CT'
 
@@ -26,7 +26,7 @@ windowSize = 10
 patienceNum = 100
 
 lrs = Tuners.lrs1
-# lrs = [0.004]
+lrs = [0.006]
 SHOW = (len(lrs) == 1)
 
 processPercentage = sub_iter * len(lrs)
@@ -56,13 +56,13 @@ for lr in lrs:
         path_img = getDataFolderPath(databaseNum,
                                      dataFolderPath) + '/replicate_1/nested/Block2/out_cnn' + '/24/' + filename
 
-        x_out = fijii_np(path_img, shape=getShape())
-        MSE = np.mean((x_gt * getPhantomROI() - x_out * getPhantomROI()) ** 2)
+        x_out = fijii_np(path_img, shape=getShape()) * getPhantomROI()
+        MSE = np.mean((x_gt * getPhantomROI() - x_out) ** 2)
         MSEs.append(MSE)
         # PSNR = 10 * np.log((np.amax(np.abs(x_gt * getPhantomROI()))) ** 2 / MSE)
-        PSNRs.append(psnr(x_gt * getPhantomROI(), x_out * getPhantomROI(), data_range=x_gt.max() - x_gt.min()))
+        PSNRs.append(psnr(x_gt * getPhantomROI(), x_out, data_range=x_gt.max() - x_gt.min()))
         #PSNRs.append(PSNR)
-        SSIMs.append(ssim(np.squeeze(x_gt * getPhantomROI()), np.squeeze(x_out * getPhantomROI()), data_range=x_gt.max() - x_gt.min()))
+        SSIMs.append(ssim(np.squeeze(x_gt * getPhantomROI()), np.squeeze(x_out), data_range=x_gt.max() - x_gt.min()))
 
         queueQ.append(x_out.flatten())
         if len(queueQ) == windowSize:

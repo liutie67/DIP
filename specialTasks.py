@@ -26,5 +26,6 @@ specialTask(method_special=Tuners.ADMMoptimizerName[4],
             alpha_special=[1],
             replicates_special=1,
             threads=[128])  # mu= ?, tau = ?
-moveALL('+ADMMadpA+i100+o100+t128+a=alpha3+mu1+tau2', dtnBase=18)
+moveALL('+admm5+ADMMadpAT+i1+o3000+t128+a=1+mu1+tau2', dtnBase=20)
+
 
