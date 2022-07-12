@@ -7,7 +7,7 @@ import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
 databaseNum = 20
-dataFolderPath = '2022-07-11+16-00-02+admm4+ADMMadpAT+i1+o3000+t128+a=1+mu1+tau2'
+dataFolderPath = '2022-07-11+16-22-01+admm5+ADMMadpAT+i1+o3000+t128+a=1+mu1+tau2'
 
 optimizer = 'ADMMLim_adaptiveRhoTau-mx'
 alphas = [1]

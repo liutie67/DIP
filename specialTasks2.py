@@ -9,7 +9,7 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx'] #
 #                            0                  1                       2                           3                             4               #
 
-iter = 1000
+iter = 5000
 skip = 0
 input = 'CT'
 opti = 'Adam'
