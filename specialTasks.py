@@ -19,13 +19,15 @@ specialTask(method_special=Tuners.ADMMoptimizerName[4],
             threads=[128])  # mu= ?, tau = ?
 moveALL('+2r+new3norms+AdpAT+i1+o100*100+t128+a=alpha0+mu50+tau2')
 '''
+
 initialALL()
 specialTask(method_special=Tuners.ADMMoptimizerName[4],
             inner_special=[1],  # real inner
-            outer_special=[3000],
+            outer_special=[200],
             alpha_special=[1],
             replicates_special=1,
             threads=[128])  # mu= ?, tau = ?
-moveALL('+admm5+ADMMadpAT+i1+o3000+t128+a=1+mu1+tau2', dtnBase=20)
+
+moveALL('test1+admm+ADMMadpAT+i1+o100*100+t128+a=1+mu1+tau2+rep5', dtnBase='#')
 
 

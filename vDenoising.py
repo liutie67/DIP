@@ -225,7 +225,7 @@ class vDenoising(vGeneral):
             out, mu, logvar, z = model(self.image_net_input_torch)
         else:
             out = model(self.image_net_input_torch)
-
+                                                            ##delete the model##
         # Descaling like at the beginning
         out_descale = self.descale_imag(out,self.param1_scale_im_corrupt,self.param2_scale_im_corrupt,self.scaling_input)
         # Saving image output

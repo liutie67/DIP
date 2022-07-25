@@ -441,6 +441,7 @@ class vGeneral(abc.ABC):
         self.save_img(bkg_mask, subroot+'Data/database_v2/' + "image0" + '/' + "background_mask0" + '.raw')
 
     def write_image_tensorboard(self,writer,image,name,suffix,image_gt,i=0,full_contrast=False):
+        '''
         # Creating matplotlib figure with colorbar
         plt.figure()
         if (len(image.shape) != 2):
@@ -460,6 +461,7 @@ class vGeneral(abc.ABC):
         from textwrap import wrap
         wrapped_title = "\n".join(wrap(suffix, 50))
         plt.title(wrapped_title,fontsize=12)
+        '''
         # Adding this figure to tensorboard
         writer.add_figure(name,plt.gcf(),global_step=i,close=True)# for videos, using slider to change image with global_step
 

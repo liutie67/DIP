@@ -13,7 +13,7 @@ admmOuter = 800
 admmAlpha = 1
 
 lr = 0.006
-iter = 200
+iter = 500
 skip = 0
 input = 'CT'
 opti = 'Adam'
@@ -21,12 +21,13 @@ scaling = 'standardization'
 thread = 128
 optimizer = 'nested'
 
-globalIter = 5
+globalIter = 4
 rho = 1e-3
 
 timerStart = time.perf_counter()
-'''
+
 initialALL()
+
 specialTask(method_special=optimizer,
             max_iter=[globalIter],
             replicates_special=1,
@@ -42,7 +43,7 @@ specialTask(method_special=optimizer,
             rho_special=[rho],
             nb_subsets=[28],
             threads=[thread])
-'''
+
 timerEnd = time.perf_counter()
 
 moveALL('+' + optimizer
