@@ -9,19 +9,19 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx'] #
 #                            0                  1                       2                           3                             4               #
 
-iter = 5000
+iter = 1000
 skip = 0
 input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-optimizer = 'admm5+adpAT+a1+i1o2000'
+optimizer = 'ADMMi100o100a0.005 '
 
 initialALL()
 timerStart = time.perf_counter()
 specialTask(method_special='nested',
             DIP_special=True,
-            lr_special=[0.006],
+            lr_special=Tuners.lrs1,
             sub_iter_special=[iter],
             skip_special=[skip],
             input_special=[input],
@@ -29,8 +29,8 @@ specialTask(method_special='nested',
             scaling_special=[scaling],
             threads=[thread])
 timerEnd = time.perf_counter()
-moveALL('+dip5+' + optimizer
-        + '+lr=0.006'
+moveALL('+' + optimizer
+        + '+lr=lr1'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
@@ -38,7 +38,7 @@ moveALL('+dip5+' + optimizer
         + '+scaling' + scaling
         + '+t' + str(thread)
         + '+' + str(int(timerEnd - timerStart)) + 's',
-        dtnBase=20
+        dtnBase='F'
         )
 
 
