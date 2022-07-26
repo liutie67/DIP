@@ -3,24 +3,25 @@ import Tuners
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-SHOW = True  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+SHOW = False  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ----------------------------------------------------------------------------------------------------------------------
-outputDatabaseNb = '#'  # remember to change _squreNorm
+outputDatabaseNb = 'F'  # remember to change _squreNorm
 dataFolderPath = '2022-07-25+19-11-51ADMM+i100+o100+t128+a=alphas0+mu1+tau100+rep3'
+replicates = 1
 # ----------------------------------------------------------------------------------------------------------------------
-whichADMMoptimizer = Tuners.ADMMoptimizerName[4]
+whichADMMoptimizer = Tuners.ADMMoptimizerName[0]
 #                            0                   1                      2                            3                            4
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx']
 # ----------------------------------------------------------------------------------------------------------------------
-option = 1
+option = 0
 #            0            1              2              3                 4
 OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters', 'calculateDiffCurve']
 tuners_tag = OPTION[option]
 # ----------------------------------------------------------------------------------------------------------------------
-innerIteration = 1
-outerIteration = 100*50
+innerIteration = 100
+outerIteration = 100
 # ----------------------------------------------------------------------------------------------------------------------
-ALPHAS = Tuners.alphas6
+ALPHAS = Tuners.alphas0
 # ----------------------------------------------------------------------------------------------------------------------
 # calculate difference curves parameters
 inners = list(range(innerIteration))
@@ -32,7 +33,6 @@ TOGETHER = False
 vb = 1
 threads = 128
 REPLICATES = True
-replicates = 1
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 # ----------------------------------------------------------------------------------------------------------------------
 _3NORMS = True  # defaut:True

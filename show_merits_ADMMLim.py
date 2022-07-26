@@ -14,6 +14,7 @@ from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
 from panel_show_merits_ADMMLim import _3NORMS, _2R, _squreNorm
 
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
+fomSavingPath = databasePath + dataFolderPath +'/replicate_' + str(replicates)
 
 if tuners_tag == 'alphas':
     # outerIteration = 1000
@@ -113,11 +114,11 @@ for i in range(len(tuners)):
         PLOT(outer_iters, likelihoods, tuners, i, figNum=6,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Likelihood(same scale)',
+             Title='Likelihood(same scale - 1)',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
-        plt.ylim([2.904e6, 2.919e6])
+             imagePath=fomSavingPath)
+        plt.ylim([2.904e6, 2.922e6])
 
         PLOT(outer_iters, likelihoods, tuners, i, figNum=1,
              Xlabel='Outer iteration',
@@ -125,7 +126,7 @@ for i in range(len(tuners)):
              Title='Likelihood',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         IR_bkgs = []
         MSEs = []
@@ -163,7 +164,7 @@ for i in range(len(tuners)):
              Title='Image Roughness in the background',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, MSEs, tuners, i, figNum=3,
              Xlabel='Outer iteration',
@@ -171,7 +172,7 @@ for i in range(len(tuners)):
              Title='Mean Square Error',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, CRC_hots, tuners, i, figNum=4,
              Xlabel='Outer iteration',
@@ -179,7 +180,7 @@ for i in range(len(tuners)):
              Title='CRC hot',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, MA_colds, tuners, i, figNum=5,
              Xlabel='Outer iteration',
@@ -187,7 +188,7 @@ for i in range(len(tuners)):
              Title='MA cold',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, Xnorms, tuners, i, figNum=7,
              Xlabel='Outer iteration',
@@ -195,7 +196,7 @@ for i in range(len(tuners)):
              Title='norm of x',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, Vnorms, tuners, i, figNum=8,
              Xlabel='Outer iteration',
@@ -203,7 +204,7 @@ for i in range(len(tuners)):
              Title='norm of v',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, Unorms, tuners, i, figNum=9,
              Xlabel='Outer iteration',
@@ -211,7 +212,7 @@ for i in range(len(tuners)):
              Title='norm of u',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
     # adaptive alphas
     elif tuners_tag == 'adaptiveRho':
@@ -274,7 +275,7 @@ for i in range(len(tuners)):
              Title='Adaptive alphas',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, adaptiveTaus, tuners, i, figNum=2,
              Xlabel='Outer iteration',
@@ -282,7 +283,7 @@ for i in range(len(tuners)):
              Title='Adaptive taus',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, relPrimals, tuners, i, figNum=3,
              Xlabel='Outer iteration',
@@ -290,7 +291,7 @@ for i in range(len(tuners)):
              Title='Relative primal residuals',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, relDuals, tuners, i, figNum=4,
              Xlabel='Outer iteration',
@@ -298,7 +299,7 @@ for i in range(len(tuners)):
              Title='Relative dual residuals',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         PLOT(outer_iters, xis, tuners, i, figNum=5,
              Xlabel='Outer iteration',
@@ -306,7 +307,7 @@ for i in range(len(tuners)):
              Title='Xis',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
-             imagePath=databasePath + dataFolderPath)
+             imagePath=fomSavingPath)
 
         if _3NORMS:
             if _squreNorm:
@@ -319,7 +320,7 @@ for i in range(len(tuners)):
                  Title='norm of Ax(n+1) - v(n+1)',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
-                 imagePath=databasePath + dataFolderPath)
+                 imagePath=fomSavingPath)
 
             PLOT(outer_iters, normAxvus, tuners, i, figNum=7,
                  Xlabel='Outer iteration',
@@ -327,7 +328,7 @@ for i in range(len(tuners)):
                  Title='norm of Ax(n+1) - v(n) + u(n)',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
-                 imagePath=databasePath + dataFolderPath)
+                 imagePath=fomSavingPath)
 
             PLOT(outer_iters, normAxv1us, tuners, i, figNum=8,
                  Xlabel='Outer iteration',
@@ -335,7 +336,7 @@ for i in range(len(tuners)):
                  Title='norm of Ax(n+1) - v(n+1) + u(n)',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
-                 imagePath=databasePath + dataFolderPath)
+                 imagePath=fomSavingPath)
 
         if _2R:
             if _squreNorm:
@@ -347,7 +348,7 @@ for i in range(len(tuners)):
                  Title='primal residual',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
-                 imagePath=databasePath + dataFolderPath)
+                 imagePath=fomSavingPath)
 
             PLOT(outer_iters, duals, tuners, i, figNum=10,
                  Xlabel='Outer iteration',
@@ -355,7 +356,7 @@ for i in range(len(tuners)):
                  Title='dual residual',
                  replicate=replicates,
                  whichOptimizer=whichADMMoptimizer,
-                 imagePath=databasePath + dataFolderPath)
+                 imagePath=fomSavingPath)
 
         print('No.' + str(i), '  initial alpha =', tuners[i], '\trel primal', '\trel dual', file=fp)
         print(file=fp)
