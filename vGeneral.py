@@ -530,13 +530,13 @@ class vGeneral(abc.ABC):
                 mu = 1
                 tau = 100
             elif method == ADMMoptimizerName[1]:
-                mu = 1
+                mu = 10
                 tau = 2
             elif method == ADMMoptimizerName[2]:
-                mu = 1
+                mu = 2
                 tau = 100
             elif method == ADMMoptimizerName[3]:
-                mu = 10
+                mu = 1
                 tau = 100
                 method = ADMMoptimizerName[2]
             elif method == ADMMoptimizerName[4]:

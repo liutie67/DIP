@@ -21,13 +21,28 @@ moveALL('+2r+new3norms+AdpAT+i1+o100*100+t128+a=alpha0+mu50+tau2')
 '''
 
 initialALL()
-specialTask(method_special=Tuners.ADMMoptimizerName[4],
-            inner_special=[1],  # real inner
-            outer_special=[200],
-            alpha_special=[1],
-            replicates_special=1,
+specialTask(method_special=Tuners.ADMMoptimizerName[0],
+            inner_special=[100],  # real inner
+            outer_special=[100],
+            alpha_special=Tuners.alphas0,
+            replicates_special=3,
             threads=[128])  # mu= ?, tau = ?
+moveALL('ADMM+i100+o100+t128+a=alphas0+mu1+tau100+rep3', dtnBase='F')
 
-moveALL('test1+admm+ADMMadpAT+i1+o100*100+t128+a=1+mu1+tau2+rep5', dtnBase='#')
+initialALL()
+specialTask(method_special=Tuners.ADMMoptimizerName[1],
+            inner_special=[100],  # real inner
+            outer_special=[100],
+            alpha_special=Tuners.alphas0,
+            replicates_special=3,
+            threads=[128])  # mu= ?, tau = ?
+moveALL('ADMMadpA+i100+o100+t128+a=alphas0+mu10+tau2+rep3', dtnBase='F')
 
-
+initialALL()
+specialTask(method_special=Tuners.ADMMoptimizerName[2],
+            inner_special=[100],  # real inner
+            outer_special=[100],
+            alpha_special=Tuners.alphas0,
+            replicates_special=3,
+            threads=[128])  # mu= ?, tau = ?
+moveALL('ADMMadpAT+i100+o100+t128+a=alphas0+mu2+tau100+rep3', dtnBase='F')
