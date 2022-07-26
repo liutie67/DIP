@@ -114,11 +114,11 @@ for i in range(len(tuners)):
         PLOT(outer_iters, likelihoods, tuners, i, figNum=6,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Likelihood(same scale - 1)',
+             Title='Likelihood(same scale - 2)',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=fomSavingPath)
-        plt.ylim([2.904e6, 2.922e6])
+        plt.ylim([2.9e6, 2.93e6])
 
         PLOT(outer_iters, likelihoods, tuners, i, figNum=1,
              Xlabel='Outer iteration',

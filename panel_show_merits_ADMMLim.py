@@ -6,14 +6,14 @@ import Tuners
 SHOW = False  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ----------------------------------------------------------------------------------------------------------------------
 outputDatabaseNb = 'F'  # remember to change _squreNorm
-dataFolderPath = '2022-07-25+19-11-51ADMM+i100+o100+t128+a=alphas0+mu1+tau100+rep3'
+dataFolderPath = '2022-07-25+23-07-47ADMMadpAT+i100+o100+t128+a=alphas0+mu2+tau100+rep3'
 replicates = 1
 # ----------------------------------------------------------------------------------------------------------------------
-whichADMMoptimizer = Tuners.ADMMoptimizerName[0]
+whichADMMoptimizer = Tuners.ADMMoptimizerName[2]
 #                            0                   1                      2                            3                            4
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx']
 # ----------------------------------------------------------------------------------------------------------------------
-option = 0
+option = 1
 #            0            1              2              3                 4
 OPTION = ['alphas', 'adaptiveRho', 'inner_iters', 'outer_iters', 'calculateDiffCurve']
 tuners_tag = OPTION[option]
