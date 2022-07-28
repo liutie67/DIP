@@ -28,7 +28,12 @@ class iNestedADMM(vReconstruction):
             classResults.debug = self.debug
             classResults.initializeSpecific(fixed_config,hyperparameters_config,root)
         
-        for i in range(self.max_iter):
+        if (fixed_config["method"] == "Gong"):
+            i_init = 0 #-1 after MIC
+        else:
+            i_init = 0
+
+        for i in range(i_init, self.max_iter):
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Global iteration !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', i)
             start_time_outer_iter = time.time()
             
@@ -42,7 +47,10 @@ class iNestedADMM(vReconstruction):
             start_time_block2= time.time()
             if (i == 0 and fixed_config["method"] == "Gong"): # Gong at first epoch -> only pre train the network
                 # Create label corresponding to initial value of image_init
-                x_label = self.fijii_np(self.subroot_data + 'Data/initialization/' + self.image_init_path_without_extension + '.img',shape=(self.PETImage_shape),type='<f')
+                #x_label = self.fijii_np(self.subroot_data + 'Data/initialization/' + self.image_init_path_without_extension + '.img',shape=(self.PETImage_shape),type='<f')
+                # Fit MLEM 60it for first global iteration
+                #x_label = self.fijii_np(self.subroot_data + 'Data/initialization/' + 'MLEM_it60_REF_cropped.img',shape=(self.PETImage_shape),type='<f')
+                x_label = self.fijii_np(self.subroot_data + 'Data/initialization/' + 'MLEM_it300_REF_cropped.img',shape=(self.PETImage_shape),type='<d')
                 self.save_img(x_label,self.subroot+'Block2/x_label/' + format(self.experiment)+'/'+ format(-1) +'_x_label' + self.suffix + '.img')
 
                 # For first epoch, change number of epochs to 300
@@ -60,9 +68,9 @@ class iNestedADMM(vReconstruction):
             print("--- %s seconds - DIP block ---" % (time.time() - start_time_block2))
             
             if (i == 0 and fixed_config["method"] == "Gong"): # Gong at first epoch -> only pre train the network
-                self.f = self.fijii_np(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/out_' + classDenoising.net + '' + format(i-1) + self.suffix + '.img',shape=(self.PETImage_shape),type='<f') # loading DIP output
+                self.f = self.fijii_np(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/out_' + classDenoising.net + '' + format(i-1) + "_epoch=" + format(hyperparameters_config["sub_iter_DIP"] - 1) + self.suffix + '.img',shape=(self.PETImage_shape),type='<f') # loading DIP output
             else:
-                self.f = self.fijii_np(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/out_' + classDenoising.net + '' + format(i) + self.suffix + '.img',shape=(self.PETImage_shape),type='<f') # loading DIP output
+                self.f = self.fijii_np(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/out_' + classDenoising.net + '' + format(i) + "_epoch=" + format(hyperparameters_config["sub_iter_DIP"] - 1) + self.suffix + '.img',shape=(self.PETImage_shape),type='<f') # loading DIP output
             self.f.astype(numpy.float64)
             
             if (i != 0 or fixed_config["method"] != "Gong"): # Gong at first epoch -> only pre train the network
@@ -72,6 +80,9 @@ class iNestedADMM(vReconstruction):
                 # Write corrupted image over ADMM iterations
                 classResults.writeCorruptedImage(i,hyperparameters_config["sub_iter_PLL"],self.mu,self.suffix,pet_algo="mmmmmuuuuuuu")
                 print("--- %s seconds - outer_iteration ---" % (time.time() - start_time_outer_iter))
+                # Compute IR metric (different from others with several replicates)
+                classResults.compute_IR_bkg(self.PETImage_shape,self.f,i,classResults.IR_bkg_recon,self.phantom)
+                classResults.writer.add_scalar('Image roughness in the background (best : 0)', classResults.IR_bkg_recon[i], i+1)
                 # Write output image and metrics to tensorboard
                 classResults.writeEndImagesAndMetrics(i,hyperparameters_config["sub_iter_PLL"],self.PETImage_shape,self.f,self.suffix,self.phantom,classDenoising.net,pet_algo=fixed_config["method"])
 

@@ -9,9 +9,9 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 20
-dataFolderPath = '2022-07-11+16-27-08+dip5+admm5+adpAT+a1+i1o2000+lr=0.006+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+196s'
-additionalTitle = 'admm5+adpAT+a1+i1o2000'
+databaseNum = 'F'
+dataFolderPath = '2022-07-26+15-06-43+ADMMi100o100a0.005+lr=lr2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+313s'
+additionalTitle = 'ADMMi100o100a0.005'
 
 opti = 'Adam'
 skip = 0
@@ -20,13 +20,18 @@ INPUT = 'CT'
 
 inner_iter = 50
 alpha = 0.084
+
+'''
+inner_iter = 10
+alpha = 0.005
+'''
 sub_iter = 1000
 
-windowSize = 10
-patienceNum = 100
+windowSize = 50
+patienceNum = 200
 
-lrs = Tuners.lrs1
-lrs = [0.006]
+lrs = Tuners.lrs2
+# lrs = [0.006]
 SHOW = (len(lrs) == 1)
 
 processPercentage = sub_iter * len(lrs)
@@ -53,6 +58,12 @@ for lr in lrs:
                    + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
                    + INPUT + '_d_DD=4_k_DD=32_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
                    + '_mlem_=False.img'
+        '''
+        filename = 'out_DIP_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
+                   + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
+                   + INPUT + '_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
+                   + '_mlem_=False.img'
+        '''
         path_img = getDataFolderPath(databaseNum,
                                      dataFolderPath) + '/replicate_1/nested/Block2/out_cnn' + '/24/' + filename
 

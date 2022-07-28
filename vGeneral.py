@@ -13,9 +13,6 @@ import sys
 import abc
 
 from torch import fix
-
-from Tuners import ADMMoptimizerName
-
 class vGeneral(abc.ABC):
     @abc.abstractmethod
     def __init__(self,config):
@@ -38,7 +35,7 @@ class vGeneral(abc.ABC):
 
         # Initialize some parameters from fixed_config
         self.finetuning = fixed_config["finetuning"]
-        print(fixed_config["image"])
+        self.all_images_DIP = fixed_config["all_images_DIP"]
         self.phantom = fixed_config["image"]
         self.net = fixed_config["net"]
         self.method = fixed_config["method"]
@@ -47,14 +44,13 @@ class vGeneral(abc.ABC):
         self.max_iter = fixed_config["max_iter"] # Outer iterations
         self.experiment = fixed_config["experiment"] # Label of the experiment
         self.replicate = fixed_config["replicates"] # Label of the replicate
-        self.nb_threads = fixed_config["nb_threads"]
-        self.post_smoothing = fixed_config["post_smoothing"]
         self.penalty = fixed_config["penalty"]
 
         self.FLTNB = fixed_config["FLTNB"]
 
         # Initialize useful variables
         self.subroot = root + '/data/Algo/' + 'debug/'*self.debug + self.phantom + '/'+ 'replicate_' + str(self.replicate) + '/' + self.method + '/' # Directory root
+        self.subroot_metrics = root + '/data/Algo/' + 'debug/'*self.debug + 'metrics/' + self.phantom + '/'+ 'replicate_' + str(self.replicate) + '/' # Directory root for metrics
         self.subroot_data = root + '/data/Algo/' # Directory root
         self.suffix = self.suffix_func(hyperparameters_config) # self.suffix to make difference between raytune runs (different hyperparameters)
         self.suffix_metrics = self.suffix_func(hyperparameters_config,NNEPPS=True) # self.suffix with NNEPPS information
@@ -70,28 +66,22 @@ class vGeneral(abc.ABC):
         return hyperparameters_config
 
     def createDirectoryAndConfigFile(self,hyperparameters_config):
-        Path(self.subroot+'Block1/' + self.suffix + '/before_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
-        Path(self.subroot+'Block1/' + self.suffix + '/during_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
-        Path(self.subroot+'Block1/' + self.suffix + '/out_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
+        if (self.method == 'nested' or self.method == 'Gong'):
+            Path(self.subroot+'Block1/' + self.suffix + '/before_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
+            Path(self.subroot+'Block1/' + self.suffix + '/during_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
+            Path(self.subroot+'Block1/' + self.suffix + '/out_eq22').mkdir(parents=True, exist_ok=True) # CASToR path
 
-        Path(self.subroot+'Images/out_final/'+format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # Output of the framework (Last output of the DIP)
+            Path(self.subroot+'Images/out_final/'+format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # Output of the framework (Last output of the DIP)
 
-        Path(self.subroot+'Block2/checkpoint/'+format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
-        Path(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # Output of the DIP block every outer iteration
-        Path(self.subroot+'Block2/out_cnn/vae').mkdir(parents=True, exist_ok=True) # Output of the DIP block every outer iteration
-        Path(self.subroot+'Block2/out_cnn/cnn_metrics/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # DIP block metrics
-        Path(self.subroot+'Block2/x_label/'+format(self.experiment) + '/').mkdir(parents=True, exist_ok=True) # x corrupted - folder
-
-        Path(self.subroot+'Block2/checkpoint/'+format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
-        Path(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
-        Path(self.subroot+'Block2/mu/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
-        Path(self.subroot+'Block2/out_cnn/cnn_metrics/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
+            Path(self.subroot+'Block2/checkpoint/'+format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
+            Path(self.subroot+'Block2/out_cnn/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # Output of the DIP block every outer iteration
+            Path(self.subroot+'Block2/out_cnn/vae').mkdir(parents=True, exist_ok=True) # Output of the DIP block every outer iteration
+            Path(self.subroot+'Block2/out_cnn/cnn_metrics/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True) # DIP block metrics
+            Path(self.subroot+'Block2/x_label/'+format(self.experiment) + '/').mkdir(parents=True, exist_ok=True) # x corrupted - folder
+            Path(self.subroot+'Block2/mu/'+ format(self.experiment)+'/').mkdir(parents=True, exist_ok=True)
 
         Path(self.subroot_data + 'Data/initialization').mkdir(parents=True, exist_ok=True)
                 
-        Path(self.subroot_data+'metrics/' + self.method + '/' + self.suffix_metrics).mkdir(parents=True, exist_ok=True) # CASToR path
-        Path(self.subroot_data + 'debug/' +'metrics/' + self.method + '/' + self.suffix_metrics).mkdir(parents=True, exist_ok=True) # CASToR path
-
     def runRayTune(self,config,root,task):
         # Check parameters incompatibility
         self.parametersIncompatibility(config,task)
@@ -140,7 +130,16 @@ class vGeneral(abc.ABC):
             # Launch computation
             self.do_everything(config,root)
         else:
-            tune.run(partial(self.do_everything,root=root), config=config,local_dir = os.getcwd() + '/runs', resources_per_trial = resources_per_trial)#, progress_reporter = reporter)
+            # tune.run(partial(self.do_everything,root=root), config=config,local_dir = os.getcwd() + '/runs', resources_per_trial = resources_per_trial)#, progress_reporter = reporter)
+
+            # Remove grid search if debug mode and choose first element of each config key. The result does not matter, just if the code runs.
+            for key, value in config.items():
+                if key != "hyperparameters":
+                    config[key] = value["grid_search"][0]
+
+            # Launch computation
+            self.do_everything(config,root)
+
 
     def parametersIncompatibility(self,config,task):
         config["task"] = {'grid_search': [task]}
@@ -170,11 +169,14 @@ class vGeneral(abc.ABC):
         if (len(config["method"]['grid_search']) == 1):
             if (config["method"]['grid_search'][0] != "AML"):
                 config.pop("A_AML", None)
-            if (config["method"]['grid_search'][0] not in ADMMoptimizerName and config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong"):
-                config.pop("sub_iter_PLL", None)
+            if (config["method"]['grid_search'][0] == 'BSREM' or config["method"]['grid_search'][0] == 'nested' or config["method"]['grid_search'][0] == 'Gong'):
+                config.pop("post_smoothing", None)
+            if ('ADMMLim' not in config["method"]['grid_search'][0] and config["method"]['grid_search'][0] != "nested"):
                 config.pop("nb_iter_second_admm", None)
                 config.pop("alpha", None)
-            if (config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong" and config["method"]['grid_search'][0] != "post_reco"):
+            if ('ADMMLim' not in config["method"]['grid_search'][0] and config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong"):
+                config.pop("sub_iter_PLL", None)
+            if (config["method"]['grid_search'][0] != "nested" and config["method"]['grid_search'][0] != "Gong" and task != "post_reco"):
                 config.pop("lr", None)
                 config.pop("sub_iter_DIP", None)
                 config.pop("opti_DIP", None)
@@ -183,10 +185,15 @@ class vGeneral(abc.ABC):
                 config.pop("input", None)
                 config.pop("d_DD", None)
                 config.pop("k_DD", None)
+            if (config["net"]['grid_search'][0] == "DD"):
+                config.pop("skip_connections", None)
+            elif (config["net"]['grid_search'][0] != "DD_AE"): # not a Deep Decoder based architecture, so remove k and d
+                config.pop("d_DD", None)
+                config.pop("k_DD", None)
             if (config["method"]['grid_search'][0] == 'MLEM' or config["method"]['grid_search'][0] == 'AML'):
                 config.pop("rho", None)
             # Do not use subsets so do not use mlem sequence for ADMM Lim, because of stepsize computation in ADMMLim in CASToR
-            if (config["method"]['grid_search'][0] == "nested" or config["method"]['grid_search'][0] == ADMMoptimizerName):
+            if ('ADMMLim' in config["method"]['grid_search'][0] == "nested" or config["method"]['grid_search'][0]):
                 config["mlem_sequence"]['grid_search'] = [False]
         else:
             if ('results' not in task):
@@ -195,7 +202,7 @@ class vGeneral(abc.ABC):
         if (task == "show_results_replicates"):
             # List of beta values
             if (len(config["method"]['grid_search']) == 1):
-                if (config["method"]['grid_search'][0] in ADMMoptimizerName):
+                if ('ADMMLim' in config["method"]['grid_search'][0]):
                     self.beta_list = config["alpha"]['grid_search']
                     config["alpha"] = tune.grid_search([0]) # Only put 1 value to avoid running same run several times (only for results with several replicates)
                 else:
@@ -233,11 +240,19 @@ class vGeneral(abc.ABC):
                 ref_numbers = format(i) + '_' + variable_name
             else:
                 ref_numbers = format(i)
-        else:
+        elif (len(L) == 2):
             i = L[0]
             k = L[1]
             if variable_name != '':
                 ref_numbers = format(i) + '_' + format(k) + '_' + variable_name
+            else:
+                ref_numbers = format(i)
+        elif (len(L) == 3):
+            i = L[0]
+            k = L[1]
+            inner_it = L[2]
+            if variable_name != '':
+                ref_numbers = format(i) + '_' + format(k) + '_' + format(inner_it) + '_' + variable_name
             else:
                 ref_numbers = format(i)
         filename = subroot_output_path + '/'+ subpath + '/' + ref_numbers +'.hdr'
@@ -441,7 +456,6 @@ class vGeneral(abc.ABC):
         self.save_img(bkg_mask, subroot+'Data/database_v2/' + "image0" + '/' + "background_mask0" + '.raw')
 
     def write_image_tensorboard(self,writer,image,name,suffix,image_gt,i=0,full_contrast=False):
-        '''
         # Creating matplotlib figure with colorbar
         plt.figure()
         if (len(image.shape) != 2):
@@ -461,11 +475,10 @@ class vGeneral(abc.ABC):
         from textwrap import wrap
         wrapped_title = "\n".join(wrap(suffix, 50))
         plt.title(wrapped_title,fontsize=12)
-        '''
         # Adding this figure to tensorboard
         writer.add_figure(name,plt.gcf(),global_step=i,close=True)# for videos, using slider to change image with global_step
 
-    def castor_common_command_line(self, subroot, PETImage_shape_str, phantom, replicates, post_smoothing):
+    def castor_common_command_line(self, subroot, PETImage_shape_str, phantom, replicates, post_smoothing=0):
         executable = 'castor-recon'
         if (self.nb_replicates == 1):
             header_file = ' -df ' + subroot + 'Data/database_v2/' + phantom + '/data' + phantom[-1] + '/data' + phantom[-1] + '.cdh' # PET data path
@@ -473,21 +486,21 @@ class vGeneral(abc.ABC):
             header_file = ' -df ' + subroot + 'Data/database_v2/' + phantom + '/data' + phantom[-1] + '_' + str(replicates) + '/data' + phantom[-1] + '_' + str(replicates) + '.cdh' # PET data path
         dim = ' -dim ' + PETImage_shape_str
         vox = ' -vox 4,4,4'
-        vb = ' -vb 1'
+        vb = ' -vb 3'
         th = ' -th ' + str(self.nb_threads) # must be set to 1 for ADMMLim, as multithreading does not work for now with ADMMLim optimizer
         proj = ' -proj incrementalSiddon'
         psf = ' -conv gaussian,4,1,3.5::psf'
-        if (post_smoothing):
-            conv = ' -conv gaussian,8,1,3.5::post'
+        if (post_smoothing != 0):
+            conv = ' -conv gaussian,' + str(post_smoothing) + ',1,3.5::post'
         else:
             conv = ''
         # Computing likelihood
-        opti_like = ' -opti-fom'
-        # opti_like = ''
+        #opti_like = ' -opti-fom'
+        opti_like = ''
 
         return executable + dim + vox + header_file + vb + th + proj + opti_like + psf + conv
 
-    def castor_opti_and_penalty(self, method, penalty, rho, i=None ,k=None):
+    def castor_opti_and_penalty(self, method, penalty, rho, i=None):
         if (method == 'MLEM'):
             opti = ' -opti ' + method
             pnlt = ''
@@ -500,8 +513,12 @@ class vGeneral(abc.ABC):
             opti = ' -opti ' + method + ':' + self.subroot_data + 'BSREM.conf'
             pnlt = ' -pnlt ' + penalty + ':' + self.subroot_data + method + '_MRF.conf'
             penaltyStrength = ' -pnlt-beta ' + str(self.beta)
-        elif (method == 'nested'):
-            opti = ' -opti ADMMLim_adaptiveRhoTau' + ',' + str(self.alpha) + ',1,2,1'
+        elif ('nested' in method):
+            method = 'ADMMLim' + method[6:]
+            mu = 10
+            tau = 2
+            xi = 1
+            opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi) # ADMMLim dirty 1 or 2
             pnlt = ' -pnlt DIP_ADMM'
             '''
             if (i==0): # For first iteration, put rho to zero
@@ -522,30 +539,14 @@ class vGeneral(abc.ABC):
             if (i==0): # For first iteration, put rho to zero
                 rho = 0
             penaltyStrength = ' -pnlt-beta ' + str(rho)
-
-        elif (method in ADMMoptimizerName):
-            # mu = 2     # mu = 10 or     mu = 2
-            # tau = 100  # tau = 2 or tau_max = 100
-            if method == ADMMoptimizerName[0]:
-                mu = 1
-                tau = 100
-            elif method == ADMMoptimizerName[1]:
-                mu = 10
-                tau = 2
-            elif method == ADMMoptimizerName[2]:
-                mu = 2
-                tau = 100
-            elif method == ADMMoptimizerName[3]:
-                mu = 1
-                tau = 100
-                method = ADMMoptimizerName[2]
-            elif method == ADMMoptimizerName[4]:
-                mu = 1
-                tau = 2
-                method = ADMMoptimizerName[2]
+        elif ('ADMMLim' in method):
+            mu = 10
+            tau = 2
             xi = 1
-            opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
-            # opti = ' -opti ADMMLim' + ',' + str(self.alpha)
+            if method == 'ADMMLim':
+                opti = ' -opti ' + method + ',' + str(self.alpha)
+            else:
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
             pnlt = ' -pnlt ' + penalty
             if penalty == "MRF":
                 pnlt += ':' + self.subroot_data + method + '_MRF.conf'

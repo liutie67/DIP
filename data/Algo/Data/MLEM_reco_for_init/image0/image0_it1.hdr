@@ -39,7 +39,7 @@ pause between frame groups (sec) := 0
 !END OF INTERFILE := 
 
 !COPY OF INPUT HEADER 1
-Data filename: data0_2.cdf
+Data filename: data0.cdf
 Number of events: 68516
 Data mode: histogram
 Data type: pet
@@ -50,7 +50,7 @@ Maximum number of lines per event: 1
 Axial compression: 1
 Azymutal compression: 1
 Max ring diff: 0
-Calibration factor: 748.1
+Calibration factor: 749.014
 Isotope: INF
 Attenuation correction flag: 1
 Normalization correction flag: 1

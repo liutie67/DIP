@@ -6,14 +6,14 @@ import time
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 20
-dataFolderPath = '2022-07-11+16-22-01+admm5+ADMMadpAT+i1+o3000+t128+a=1+mu1+tau2'
+databaseNum = 'F'
+dataFolderPath = '2022-07-26+14-55-12ADMMadpA+initial+i100+o100+t128+a=0.005+mu10+tau2+rep3'
 
-optimizer = 'ADMMLim_adaptiveRhoTau-mx'
-alphas = [1]
+optimizer = Tuners.ADMMoptimizerName[1]
+alphas = [0.005]
 thread = 128
-innerIteration = 1
-outerIteration = 3000
+innerIteration = 100
+outerIteration = 100
 FULLCONTRAST = True
 
 iterations = range(1, outerIteration)
@@ -26,7 +26,7 @@ for alpha in alphas:
     for iteration in iterations:
         filename = '0_' + str(iteration) + '_it' + str(innerIteration) + '.img'
         path_img = getDataFolderPath(databaseNum, dataFolderPath) + '/replicate_1/' + optimizer + '/Comparison/' \
-                   + optimizer + '/' + 'config_rho=0_sub_i=1_alpha=' + str(alpha) + '_mlem_=False/ADMM_' + str(thread) \
+                   + optimizer + '/' + 'config_rho=0_sub_i=' + str(innerIteration) + '_alpha=' + str(alpha) + '_mlem_=False/ADMM_' + str(thread) \
                    + '/' + filename
 
         x_out = fijii_np(path_img, shape=getShape(), type='<d')
