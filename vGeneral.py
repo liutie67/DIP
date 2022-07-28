@@ -540,12 +540,22 @@ class vGeneral(abc.ABC):
                 rho = 0
             penaltyStrength = ' -pnlt-beta ' + str(rho)
         elif ('ADMMLim' in method):
-            mu = 10
-            tau = 2
-            xi = 1
             if method == 'ADMMLim':
                 opti = ' -opti ' + method + ',' + str(self.alpha)
-            else:
+            elif method == 'ADMMLim_new':
+                mu = 10
+                tau = 2
+                xi = 1
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            elif method == 'ADMMLim_adaptiveRho':
+                mu = 10
+                tau = 2
+                xi = 1
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            elif method == 'ADMMLim_adaptiveRhoTau':
+                mu = 2
+                tau = 100
+                xi = 1
                 opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
             pnlt = ' -pnlt ' + penalty
             if penalty == "MRF":
