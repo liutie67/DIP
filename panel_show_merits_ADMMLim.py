@@ -6,10 +6,10 @@ import Tuners
 SHOW = False  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ----------------------------------------------------------------------------------------------------------------------
 outputDatabaseNb = '#'  # remember to change _squreNorm
-dataFolderPath = '2022-07-27+09-31-46ADMM+initial+i100+o100+t128+a=alphas0+mu1+tau100+rep5+0'
+dataFolderPath = '2022-07-29+16-18-43ADMMadpA+i100+o100+t128+a=1+mu10+tau2+rep1+1'
 replicates = 1
 # ----------------------------------------------------------------------------------------------------------------------
-whichADMMoptimizer = Tuners.ADMMoptimizerName[0]
+whichADMMoptimizer = Tuners.ADMMoptimizerName[1]
 #                            0                   1                      2                            3                            4
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx']
 # ----------------------------------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ tuners_tag = OPTION[option]
 innerIteration = 100
 outerIteration = 100
 # ----------------------------------------------------------------------------------------------------------------------
-ALPHAS = Tuners.alphas0
+ALPHAS = [1]
 # ----------------------------------------------------------------------------------------------------------------------
 # calculate difference curves parameters
 inners = list(range(innerIteration))

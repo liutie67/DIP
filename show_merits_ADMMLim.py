@@ -16,6 +16,13 @@ from panel_show_merits_ADMMLim import _3NORMS, _2R, _squreNorm
 databasePath = getDatabasePath(outputDatabaseNb) + '/'
 fomSavingPath = databasePath + dataFolderPath +'/replicate_' + str(replicates)
 
+threads_folder = False
+if threads_folder == True:
+    ADMM_threads = 'ADMM_' + str(threads)
+else:
+    ADMM_threads = ''
+
+
 if tuners_tag == 'alphas':
     # outerIteration = 1000
     # innerIteration = 50
@@ -82,12 +89,12 @@ for i in range(len(tuners)):
         likelihoods = []
         for outer_iter in outers:
             if REPLICATES:
-                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
-                                 + whichADMMoptimizer
+                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer \
+                                 # + '/Comparison/' + whichADMMoptimizer
             else:
                 replicatesPath = ''
             logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) \
-                        + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+                        + '_alpha=' + str(tuners[i]) + '_mlem_=False_post_=0/' + ADMM_threads
             logfile_name = '0_' + str(outer_iter) + '.log'
             path_log = logfolder + logfile_name
             theLog = pd.read_table(path_log)
@@ -114,11 +121,11 @@ for i in range(len(tuners)):
         PLOT(outer_iters, likelihoods, tuners, i, figNum=6,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='Likelihood(same scale - 2)',
+             Title='Likelihood(same scale)',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=fomSavingPath)
-        plt.ylim([2.9e6, 2.93e6])
+        plt.ylim([2.904e6, 2.919e6])
 
         PLOT(outer_iters, likelihoods, tuners, i, figNum=1,
              Xlabel='Outer iteration',
@@ -135,17 +142,25 @@ for i in range(len(tuners)):
         Xnorms = []
         Vnorms = []
         Unorms = []
+        U_scaled_norms = []
         for outer_iter in outers:
             if REPLICATES:
-                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
-                                 + whichADMMoptimizer
+                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer \
+                                 #+ '/Comparison/' + whichADMMoptimizer
             else:
                 replicatesPath = ''
             imageFolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' \
-                          + str(innerIteration) + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+                          + str(innerIteration) + '_alpha=' + str(tuners[i]) + '_mlem_=False_post_=0/' + ADMM_threads
             imageName = '0_' + str(outer_iter) + '_it' + str(innerIteration) + '.img'
             vName = '0_' + str(outer_iter) + '_v.img'
             uName = '0_' + str(outer_iter) + '_u.img'
+
+            logfolder = imageFolder
+            logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
+            path_txt = logfolder + logfile_name
+            coeff_alpha = getValueFromLogRow(path_txt, 0)/getValueFromLogRow(path_txt, 4)
+
+
 
             imagePath = imageFolder + imageName
             IR, MSE, CRC, MA = computeThose4(imagePath)
@@ -156,7 +171,9 @@ for i in range(len(tuners)):
 
             Xnorms.append(computeNorm(imagePath))
             Vnorms.append(computeNorm(imageFolder+vName))
-            Unorms.append(computeNorm(imageFolder+uName))
+            u_norm = computeNorm(imageFolder+uName)
+            Unorms.append(u_norm)
+            U_scaled_norms.append(u_norm/coeff_alpha)
 
         PLOT(outer_iters, IR_bkgs, tuners, i, figNum=2,
              Xlabel='Outer iteration',
@@ -214,6 +231,14 @@ for i in range(len(tuners)):
              whichOptimizer=whichADMMoptimizer,
              imagePath=fomSavingPath)
 
+        PLOT(outer_iters, U_scaled_norms, tuners, i, figNum=10,
+             Xlabel='Outer iteration',
+             Ylabel='The legend shows different alpha',
+             Title='norm of SCALED u',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=fomSavingPath)
+
     # adaptive alphas
     elif tuners_tag == 'adaptiveRho':
         adaptiveAlphas = []
@@ -228,12 +253,12 @@ for i in range(len(tuners)):
         duals = []
         for outer_iter in outers:
             if REPLICATES:
-                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer + '/Comparison/' \
-                                 + whichADMMoptimizer
+                replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer \
+                                 #+ '/Comparison/' + whichADMMoptimizer
             else:
                 replicatesPath = ''
             logfolder = databasePath + dataFolderPath + replicatesPath + '/config_rho=0_sub_i=' + str(innerIteration) \
-                        + '_alpha=' + str(tuners[i]) + '_mlem_=False/ADMM_' + str(threads) + '/'
+                        + '_alpha=' + str(tuners[i]) + '_mlem_=False_post_=0/' + ADMM_threads
             logfile_name = '0_' + str(outer_iter) + '_adaptive.log'
             path_txt = logfolder + logfile_name
 

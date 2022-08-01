@@ -230,6 +230,8 @@ def PLOT(X,
     plt.xlabel(Xlabel)
     plt.ylabel(Ylabel)
     plt.title('(' + whichOptimizer + ')(replicate ' + str(replicate) + ') ' + Title)
+    if 'same scale' in Title:
+        plt.ylim([2.904e6, 2.919e6])
     if Together:
         if replicate > 0 and tuners[-1] == tuners[nbTuner]:
             mkdir(imagePath)

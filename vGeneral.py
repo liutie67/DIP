@@ -486,7 +486,7 @@ class vGeneral(abc.ABC):
             header_file = ' -df ' + subroot + 'Data/database_v2/' + phantom + '/data' + phantom[-1] + '_' + str(replicates) + '/data' + phantom[-1] + '_' + str(replicates) + '.cdh' # PET data path
         dim = ' -dim ' + PETImage_shape_str
         vox = ' -vox 4,4,4'
-        vb = ' -vb 3'
+        vb = ' -vb 1'
         th = ' -th ' + str(self.nb_threads) # must be set to 1 for ADMMLim, as multithreading does not work for now with ADMMLim optimizer
         proj = ' -proj incrementalSiddon'
         psf = ' -conv gaussian,4,1,3.5::psf'
@@ -495,8 +495,8 @@ class vGeneral(abc.ABC):
         else:
             conv = ''
         # Computing likelihood
-        #opti_like = ' -opti-fom'
-        opti_like = ''
+        opti_like = ' -opti-fom'
+        # opti_like = ''
 
         return executable + dim + vox + header_file + vb + th + proj + opti_like + psf + conv
 
@@ -554,6 +554,18 @@ class vGeneral(abc.ABC):
                 opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
             elif method == 'ADMMLim_adaptiveRhoTau':
                 mu = 2
+                tau = 100
+                xi = 1
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            elif method == 'ADMMLim_adaptiveRhoTau-m10':
+                method = 'ADMMLim_adaptiveRho'
+                mu = 1
+                tau = 2
+                xi = 1
+                opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)
+            elif method == 'ADMMLim_adaptiveRhoTau-mx':
+                method = 'ADMMLim_adaptiveRhoTau'
+                mu = 1
                 tau = 100
                 xi = 1
                 opti = ' -opti ' + method + ',' + str(self.alpha) + ',' + str(mu) + ',' + str(tau) + ',' + str(xi)

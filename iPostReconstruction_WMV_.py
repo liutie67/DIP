@@ -97,6 +97,7 @@ class iPostReconstruction(vDenoising):
             out_descale = self.descale_imag(out, self.param1_scale_im_corrupt, self.param2_scale_im_corrupt,
                                             self.scaling_input)
             # '''
+
             # Saving image output
             net_outputs_path = self.subroot + 'Block2/out_cnn/' + format(
                 self.experiment) + '/out_' + self.net + '_epoch=' + format(epoch) + self.suffix + '.img'
@@ -104,6 +105,7 @@ class iPostReconstruction(vDenoising):
             # Squeeze image by loading it
             out_descale = self.fijii_np(net_outputs_path, shape=(self.PETImage_shape), type='<f')  # loading DIP output
             # Saving (now DESCALED) image output
+
             self.save_img(out_descale, net_outputs_path)
 
             # Compute IR metric (different from others with several replicates)
