@@ -18,64 +18,80 @@ pseudo codes of this file:
         
 '''
 
-# 1. initialise all the parameters used in the hardcoded path.
-databaseNum = 'F'  # choose the database number
-dataFolderPath = '2022-07-26+15-06-43+ADMMi100o100a0.005+lr=lr2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+313s'  # choose the folder path
+paths = [
+    '2022-08-02+15-36-04+randomInitialization6+ADMMadpATi1o5000rep1reps=5+lr=lr1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+125s',
+    '2022-08-02+15-38-44+randomInitialization7+ADMMadpATi1o5000rep1reps=5+lr=lr1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+125s',
+    '2022-08-02+15-45-42+randomInitialization8+ADMMadpATi1o5000rep1reps=5+lr=lr1+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+123s'
 
-opti = 'Adam'
-skip = 0
-scaling = 'standardization'
-INPUT = 'CT'
+]
+for path in paths:
+    # 1. initialise all the parameters used in the hardcoded path.
+    databaseNum = 'D'  # choose the database number
+    dataFolderPath = path  # choose the folder path
+    replicate = 1
 
-inner_iter = 50
-alpha = 0.084
-sub_iter = 1000
+    opti = 'Adam'
+    skip = 0
+    scaling = 'standardization'
+    INPUT = 'CT'
 
-FULLCONTRAST = False
+    inner_iter = 10
+    alpha = 0.005
+    sub_iter = 1000
 
-lrs = Tuners.lrs2[2:14]  # choose the lrs to be saved into png
-epoches = range(0, 500)  # choose the epoch to be saved into png
+    FULLCONTRAST = False
 
-processPercentage = len(epoches)*len(lrs)       # variable used to track the process
-processNum = 0                                  # variable used to track the process
-timeStart = time.perf_counter()
-# 2. loop on learning rates.
-for lr in lrs:
-    # 2.1 loop on epoches.
-    for epoch in epoches:
-        filename = 'out_DIP_post_reco_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
-                   + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
-                   + INPUT + '_d_DD=4_k_DD=32_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
-                   + '_mlem_=False.img'
-        path_img = getDataFolderPath(databaseNum, dataFolderPath) + '/replicate_1/nested/Block2/out_cnn' + '/24/' + filename
+    lrs = Tuners.lrs1  # choose the lrs to be saved into png
+    lrs = [0.007]
+    epoches = range(0, 1000)  # choose the epoch to be saved into png
 
-        x_out = fijii_np(path_img, shape=getShape())
+    processPercentage = len(epoches)*len(lrs)       # variable used to track the process
+    processNum = 0                                  # variable used to track the process
+    timeStart = time.perf_counter()
+    # 2. loop on learning rates.
+    for lr in lrs:
+        # 2.1 loop on epoches.
+        for epoch in epoches:
+            '''
+            filename = 'out_DIP_post_reco_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
+                       + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
+                       + INPUT + '_d_DD=4_k_DD=32_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
+                       + '_mlem_=False.img'
+            '''
+            filename = 'out_DIP_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
+                       + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
+                       + INPUT + '_sub_i=' + str(inner_iter) + '_alpha=' + str(alpha) \
+                       + '_mlem_=False.img'
 
-        plt.figure(1)
-        if FULLCONTRAST:
-            plt.imshow(x_out, cmap='gray_r')
-            plt.title('epoch ' + str(epoch) + '(Full Contrast)')
-        else:
-            plt.imshow(x_out, cmap='gray_r', vmin=0, vmax=500)
-            plt.title('epoch ' + str(epoch))
-        plt.colorbar()
+            path_img = getDataFolderPath(databaseNum, dataFolderPath) + '/replicate_1/nested/Block2/out_cnn' + '/24/' + filename
 
-        # 2.1.1 save image into png.
-        if FULLCONTRAST:
-            plt.savefig(
-                mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/processImages/lr' + str(lr) + '(FC)')
-                + '/epoch' + str(epoch) + '(FC).png')
-        else:
-            plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/processImages/lr' + str(lr))
-                        + '/epoch' + str(epoch) + '.png')
-        plt.clf()
+            x_out = fijii_np(path_img, shape=getShape())
 
-        timeEnd = time.perf_counter()
-        processNum += 1
-        if processNum % 5 == 0:
-            print('Processing: ' + str(format((processNum/processPercentage)*100, '.2f')) + '% finished\t', end='')
-            v = 5/(timeEnd - timeStart)
-            minute = int(((processPercentage - processNum)/v)/60)
-            second = int(((processPercentage - processNum)/v) % 60)
-            print('estimated time left: ' + str(minute) + ' min ' + str(second) + 's')
-            timeStart = time.perf_counter()
+            plt.figure(1)
+            if FULLCONTRAST:
+                plt.imshow(x_out, cmap='gray_r')
+                plt.title('epoch ' + str(epoch) + '(Full Contrast)')
+            else:
+                plt.imshow(x_out, cmap='gray_r', vmin=0, vmax=500)
+                plt.title('epoch ' + str(epoch))
+            plt.colorbar()
+
+            # 2.1.1 save image into png.
+            if FULLCONTRAST:
+                plt.savefig(
+                    mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/replicate_' + str(replicate) + '/processImages/lr' + str(lr) + '(FC)')
+                    + '/epoch' + str(epoch) + '(FC).png')
+            else:
+                plt.savefig(mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/replicate_' + str(replicate) + '/processImages/lr' + str(lr))
+                            + '/epoch' + str(epoch) + '.png')
+            plt.clf()
+
+            timeEnd = time.perf_counter()
+            processNum += 1
+            if processNum % 5 == 0:
+                print('Processing: ' + str(format((processNum/processPercentage)*100, '.2f')) + '% finished\t', end='')
+                v = 5/(timeEnd - timeStart)
+                minute = int(((processPercentage - processNum)/v)/60)
+                second = int(((processPercentage - processNum)/v) % 60)
+                print('estimated time left: ' + str(minute) + ' min ' + str(second) + 's')
+                timeStart = time.perf_counter()

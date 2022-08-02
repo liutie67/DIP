@@ -15,15 +15,15 @@ input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-rep = 5
-optimizer = 'ADMMadpATi1o100*100rep' + str(rep)
+rep = 1
+optimizer = 'ADMMadpATi1o5000rep' + str(rep)
 
 initialALL()
 timerStart = time.perf_counter()
 
-for lr in Tuners.lrs1:
+for lr in [0.007]:
     specialTask(method='nested',
-                random_seed=True,
+                random_seed=False,
                 threads=thread,
                 all_images_DIP="True",
                 lr=lr,
@@ -35,7 +35,7 @@ for lr in Tuners.lrs1:
                 post_recon=True)
 
 timerEnd = time.perf_counter()
-moveALL('+' + optimizer
+moveALL('+randomInitialization8+' + optimizer
         + 'reps=5'
         + '+lr=lr1'
         + '+iter' + str(iter)
