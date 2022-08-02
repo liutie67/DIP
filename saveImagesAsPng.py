@@ -6,8 +6,21 @@ import time
 import Tuners
 from show_functions import getGT, getDataFolderPath, fijii_np, getShape, getPhantomROI, mkdir
 
-databaseNum = 'F'
-dataFolderPath = '2022-07-26+15-06-43+ADMMi100o100a0.005+lr=lr2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+313s'
+'''
+Save images from DIP into png.
+Hardcoded path to loop through all the images(decided by variable 'epoches').
+
+pseudo codes of this file:
+    1. initialise all the parameters used in the hardcoded path.
+    2. loop on learning rates.
+        2.1 loop on epoches.
+            2.1.1 save image into png.
+        
+'''
+
+# 1. initialise all the parameters used in the hardcoded path.
+databaseNum = 'F'  # choose the database number
+dataFolderPath = '2022-07-26+15-06-43+ADMMi100o100a0.005+lr=lr2+iter1000+skip0+inputCT+optiAdam+scalingstandardization+t128+313s'  # choose the folder path
 
 opti = 'Adam'
 skip = 0
@@ -20,14 +33,15 @@ sub_iter = 1000
 
 FULLCONTRAST = False
 
-lrs = Tuners.lrs2[2:14]
-epoches = range(0, 500)
+lrs = Tuners.lrs2[2:14]  # choose the lrs to be saved into png
+epoches = range(0, 500)  # choose the epoch to be saved into png
 
-
-processPercentage = len(epoches)*len(lrs)
-processNum = 0
+processPercentage = len(epoches)*len(lrs)       # variable used to track the process
+processNum = 0                                  # variable used to track the process
 timeStart = time.perf_counter()
+# 2. loop on learning rates.
 for lr in lrs:
+    # 2.1 loop on epoches.
     for epoch in epoches:
         filename = 'out_DIP_post_reco_epoch=' + str(epoch) + 'config_rho=0_lr=' + str(lr) + '_sub_i=' \
                    + str(sub_iter) + '_opti_=' + opti + '_skip_=' + str(skip) + '_scali=' + scaling + '_input=' \
@@ -46,6 +60,7 @@ for lr in lrs:
             plt.title('epoch ' + str(epoch))
         plt.colorbar()
 
+        # 2.1.1 save image into png.
         if FULLCONTRAST:
             plt.savefig(
                 mkdir(getDataFolderPath(databaseNum, dataFolderPath) + '/processImages/lr' + str(lr) + '(FC)')

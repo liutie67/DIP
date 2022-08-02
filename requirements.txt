@@ -2,7 +2,8 @@
 # pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org torch
 
 
-matplotlib==3.3.4
+# matplotlib==3.3.4
+matplotlib==3.5.2
 numpy==1.21.4
 pandas==1.2.4
 pytorch-lightning==1.6.5

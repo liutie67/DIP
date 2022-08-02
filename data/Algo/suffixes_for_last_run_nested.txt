@@ -1,15 +1,1 @@
-config_rho=0_lr=0.012_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.002_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.001_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.007_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.009_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.003_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.006_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.004_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.005_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.008_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.011_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.01_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.013_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.014_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
-config_rho=0_lr=0.015_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False_NNEPP=False
+config_rho=0_lr=10_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_sub_i=10_alpha=0.005_mlem_=False_NNEPP=False

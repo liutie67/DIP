@@ -4,10 +4,10 @@ import os
 from pathlib import Path
 import pandas as pd
 from show_functions import getDatabasePath, getDataFolderPath, dldir, computeThose4, PLOT, calculateDiffCurve
-from show_functions import getValueFromLogRow, computeNorm
+from show_functions import getValueFromLogRow, computeNorm, computeAverage
 import Tuners
 
-from panel_show_merits_ADMMLim import colors, outputDatabaseNb, dataFolderPath, whichADMMoptimizer, REPLICATES
+from panel_show_merits_ADMMLim import outputDatabaseNb, dataFolderPath, whichADMMoptimizer, REPLICATES
 from panel_show_merits_ADMMLim import replicates, ALPHAS, outerIteration, innerIteration
 from panel_show_merits_ADMMLim import vb, threads, SHOW, tuners_tag
 from panel_show_merits_ADMMLim import inners, outers, alpha, MODEL, TOGETHER
@@ -48,43 +48,11 @@ elif tuners_tag == 'adaptiveRho':
     tuners = alpha0s
     fp = open(databasePath + dataFolderPath + '/adaptiveProcess' + str(duplicate) + '.log', mode='w+')
 
-elif tuners_tag == 'calculateDiffCurve':
-    tuners = outers
-
-elif tuners_tag == 'inner_iters':
-    bestInner = 0
-
-    bestAlpha = 0.005
-
-    innerIteration = 70
-    min_innerIteration = 15
-    outerIteration = 100
-
-    inner_iters = range(min_innerIteration, innerIteration + 1, 5)
-    # inner_iters = [65, 70]
-
-    outer_iters = range(outerIteration)
-    # dataFolderPath = '/ADMMLim+alpha=' + str(bestAlpha) + '+i...+o' + str(outerIteration)
-    tuners = inner_iters
-
-elif tuners_tag == 'outer_iters':
-    bestAlpha = 0.005
-    bestInner = 65
-    outerIteration = 100
-
-    outer_iters = range(1, outerIteration + 1)
-
-    # dataFolderPath = '/ADMMLim+alpha=' + str(bestAlpha) + '+i...+o' + str(outerIteration)
-    tuners = outer_iters
-
 likelihoods_alpha = []
 likelihoods_inner = []
 likelihoods_outer = []
 
 for i in range(len(tuners)):
-    if tuners_tag == 'calculateDiffCurve':
-        break
-    # tune alpha
     if tuners_tag == 'alphas':
         likelihoods = []
         for outer_iter in outers:
@@ -142,7 +110,9 @@ for i in range(len(tuners)):
         Xnorms = []
         Vnorms = []
         Unorms = []
-        U_scaled_norms = []
+        U_unscaled_norms = []
+        coeff_alphas = []
+        averageUs = []
         for outer_iter in outers:
             if REPLICATES:
                 replicatesPath = '/replicate_' + str(replicates) + '/' + whichADMMoptimizer \
@@ -173,7 +143,9 @@ for i in range(len(tuners)):
             Vnorms.append(computeNorm(imageFolder+vName))
             u_norm = computeNorm(imageFolder+uName)
             Unorms.append(u_norm)
-            U_scaled_norms.append(u_norm/coeff_alpha)
+            U_unscaled_norms.append(u_norm * coeff_alpha)
+            coeff_alphas.append(coeff_alpha)
+            averageUs.append(computeAverage(imageFolder+uName))
 
         PLOT(outer_iters, IR_bkgs, tuners, i, figNum=2,
              Xlabel='Outer iteration',
@@ -231,10 +203,26 @@ for i in range(len(tuners)):
              whichOptimizer=whichADMMoptimizer,
              imagePath=fomSavingPath)
 
-        PLOT(outer_iters, U_scaled_norms, tuners, i, figNum=10,
+        PLOT(outer_iters, U_unscaled_norms, tuners, i, figNum=10,
              Xlabel='Outer iteration',
              Ylabel='The legend shows different alpha',
-             Title='norm of SCALED u',
+             Title='norm of UNSCALED u',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=fomSavingPath)
+
+        PLOT(outer_iters, coeff_alphas, tuners, i, figNum=11,
+             Xlabel='Outer iteration',
+             Ylabel='The legend shows different alpha',
+             Title='coeff_alphas',
+             replicate=replicates,
+             whichOptimizer=whichADMMoptimizer,
+             imagePath=fomSavingPath)
+
+        PLOT(outer_iters, averageUs, tuners, i, figNum=12,
+             Xlabel='Outer iteration',
+             Ylabel='The legend shows different alpha',
+             Title='average of u',
              replicate=replicates,
              whichOptimizer=whichADMMoptimizer,
              imagePath=fomSavingPath)
@@ -401,81 +389,9 @@ for i in range(len(tuners)):
         print(file=fp)
         print(file=fp)
 
-    # tune inner iterations
-    elif tuners_tag == 'inner_iters':
-        likelihoods = []
-        for outer_iter in outers:
-            logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(tuners[i]) + '_alpha=' \
-                        + str(bestAlpha) + '_mlem_=False/ADMM_64/'
-            logfile_name = '0_' + str(outer_iter) + '.log'
-            path_log = logfolder + logfile_name
-            theLog = pd.read_table(path_log)
-            theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
-            theLikelihoodRowArray = np.array(theLikelihoodRow)
-            theLikelihoodRowString = theLikelihoodRowArray[0, 0]
-            theLikelihoodRowString = theLikelihoodRowString[22:44]
-            if theLikelihoodRowString[0] == '-':
-                theLikelihoodRowString = '0'
-            likelihood = float(theLikelihoodRowString)
-            if outer_iter == outerIteration:
-                likelihoods_inner.append(likelihood)
-            likelihoods.append(likelihood)
-
-        beginning = 0
-        if tuners[i] == bestInner:
-            plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], 'r-x', label=str(tuners[i]))
-        elif i < 10:
-            plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], label=str(tuners[i]))
-        elif 10 < i < 20:
-            plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], '.-', label=str(tuners[i]))
-        else:
-            plt.plot(outer_iters[beginning:-1], likelihoods[beginning:-1], 'x-', label=str(tuners[i]))
-        plt.legend()
-        plt.xlabel('outer iterations')
-        plt.ylabel('likelihood')
-        plt.title('The legend shows different inner iterations')
-
-    # tune outer iterations
-    elif tuners_tag == 'outer_iters':
-        logfolder = databasePath + dataFolderPath + '/config_rho=0_sub_i=' + str(bestInner) + '_alpha=' \
-                    + str(bestAlpha) + '_mlem_=False/ADMM_64/'
-        logfile_name = '0_' + str(tuners[i]) + '.log'
-        path_log = logfolder + logfile_name
-        theLog = pd.read_table(path_log)
-        theLikelihoodRow = theLog.loc[[theLog.shape[0] - 26]]
-        theLikelihoodRowArray = np.array(theLikelihoodRow)
-        theLikelihoodRowString = theLikelihoodRowArray[0, 0]
-        theLikelihoodRowString = theLikelihoodRowString[22:44]
-        if theLikelihoodRowString[0] == '-':
-            theLikelihoodRowString = '0'
-        likelihood = float(theLikelihoodRowString)
-        likelihoods_outer.append(likelihood)
-
-# calculate difference curves
-if tuners_tag == 'calculateDiffCurve':
-    calculateDiffCurve(inners, outers, outputDatabaseNb, dataFolderPath,
-                       optimizer=whichADMMoptimizer,
-                       innerIteration=innerIteration,
-                       alpha=alpha,
-                       threads=threads,
-                       REPLICATES=REPLICATES,
-                       replicates=replicates,
-                       Together=TOGETHER,
-                       model=MODEL)
-
 if tuners_tag == 'adaptiveRho':
     fp.close()
 
-if tuners_tag == 'inner_iters':
-    plt.figure()
-    plt.plot(inner_iters, likelihoods_inner, '-x')
-    plt.xlabel('inner iterations')
-    plt.title('likelihood')
-elif tuners_tag == 'outer_iters':
-    plt.figure()
-    plt.plot(outer_iters, likelihoods_outer, '-x')
-    plt.xlabel('outer iterations')
-    plt.title('likelihood')
 elif tuners_tag == 'alphas' and len(alphas)==len(likelihoods_alpha):
     plt.figure()
     plt.plot(alphas, likelihoods_alpha, '-x')

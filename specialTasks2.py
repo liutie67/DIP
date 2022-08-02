@@ -15,33 +15,37 @@ input = 'CT'
 opti = 'Adam'
 scaling = 'standardization'
 thread = 128
-optimizer = 'ADMMi100o100a0.005'
+rep = 5
+optimizer = 'ADMMadpATi1o100*100rep' + str(rep)
 
 initialALL()
 timerStart = time.perf_counter()
 
-specialTask(method_special='nested',
-            DIP_special=True,
-            lr_special=Tuners.lrs2,
-            sub_iter_special=[iter],
-            skip_special=[skip],
-            input_special=[input],
-            opti_special=[opti],
-            scaling_special=[scaling],
-            threads=[thread])
+for lr in Tuners.lrs1:
+    specialTask(method='nested',
+                random_seed=True,
+                threads=thread,
+                all_images_DIP="True",
+                lr=lr,
+                sub_iter_DIP=iter,
+                opti_DIP=opti,
+                skip_connections=skip,
+                scaling=scaling,
+                input=input,
+                post_recon=True)
 
 timerEnd = time.perf_counter()
-
 moveALL('+' + optimizer
-        + '+lr=lr2'
+        + 'reps=5'
+        + '+lr=lr1'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input
         + '+opti' + opti
         + '+scaling' + scaling
         + '+t' + str(thread)
-        + '+' + str(int(timerEnd - timerStart)) + 's',
-        dtnBase='F'
+        + '+' + str(int(timerEnd - timerStart)) + 's'
+        , dtnBase='D'
         )
 
 

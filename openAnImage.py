@@ -3,6 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from show_functions import fijii_np, find_nan, read_input_dim, input_dim_str_to_list, getShape
 
+'''
+open and save an .img image file to /home/liutie/Pictures.
+'''
+
+# absolute path
 path_img = '/home/liutie/stageSTING/DIP/data/Algo/Data/initialization/out_DIP_post_reco_epoch=311config_rho=0_lr=0.006_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False.img'
 name = ''
 for letter in path_img[::-1]:

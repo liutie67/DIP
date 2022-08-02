@@ -79,6 +79,7 @@ def getPhantomROI(image='image0'):
 
 
 def mkdir(path):
+    # check path exists or no before saving files
     folder = os.path.exists(path)
 
     if not folder:
@@ -86,13 +87,16 @@ def mkdir(path):
 
     return path
 
+
 def dldir(path):
+    # delete a path
     folder = os.path.exists(path)
     if folder:
         os.system('rm - fr ' + path)
 
 
 def moveData(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
+    # hardcoded path function
     src = baseroot + '/data/Algo/image0/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/' + str(copies) + '/'
     mkdir(dtn)
@@ -102,6 +106,7 @@ def moveData(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
 
 
 def moveRuns(copies, databaseNum=1, outFolder='400+MLEM+CT,random+0123+*100'):
+    # hardcoded path function
     src = baseroot + '/runs/*'
     dtn = '/home/liutie/Documents/outputDatabase' + str(databaseNum) + '/' + outFolder + '/tb/tb' + str(copies) + '/'
     mkdir(dtn)
@@ -116,6 +121,7 @@ def initialALL():
 
 
 def moveALL(folderName='', dtnBase = '#'):
+    # hardcoded path function
     time = datetime.datetime.now()
 
     if time.month < 10:
@@ -166,6 +172,7 @@ def getDataFolderPath(i,folder):
 
 
 def computeThose4(f, image='image0'):
+    # have the image f as input, return IR_bkg_recon, MSE_recon, CRC_hot_recon, MA_cold_recon
     f = fijii_np(f, shape=getShape(), type='<d')
     f_metric = find_nan(f)
     bkg_ROI = getPhantomROI()
@@ -312,3 +319,13 @@ def computeNorm(f_path, type='<d'):
     data_norm = np.linalg.norm(data)
 
     return data_norm
+
+
+def computeAverage(f_path, type='<d'):
+    dtype = np.dtype(type)
+    fid = open(f_path, 'rb')
+    data = np.fromfile(fid, dtype)
+    data_average = np.average(data)
+
+    return data_average
+
