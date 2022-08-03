@@ -8,7 +8,7 @@ open and save an .img image file to /home/liutie/Pictures.
 '''
 
 # absolute path
-path_img = '/home/liutie/stageSTING/DIP/data/Algo/Data/initialization/out_DIP_post_reco_epoch=311config_rho=0_lr=0.006_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_d_DD=4_k_DD=32_sub_i=50_alpha=0.084_mlem_=False.img'
+path_img = '/home/liutie/stageSTING/DIP/data/Algo/image0/replicate_1/MLEM/config_mlem_=False_post_=0/MLEM_it1000.img'
 name = ''
 for letter in path_img[::-1]:
     if letter != '/':
@@ -17,7 +17,7 @@ for letter in path_img[::-1]:
         name = name[::-1]
         break
 
-x_out = fijii_np(path_img, shape=getShape(), type='<f')
+x_out = fijii_np(path_img, shape=getShape(), type='<d')
 
 plt.figure(1)
 plt.imshow(x_out, cmap='gray_r', vmin=0, vmax=500)

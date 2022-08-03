@@ -11,6 +11,7 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 #                            0                  1                       2                           3                             4               #
 
 ##1111111111111111111111111111111111111111111111111111##
+'''
 initialALL()
 for rep in range(1, 6):
     specialTask(method=Tuners.ADMMoptimizerName[4],
@@ -20,3 +21,12 @@ for rep in range(1, 6):
                 outerIter=100*100,
                 threads=128,)  # mu= ?, tau = ?
 moveALL('ADMMadpAT+i1+o100*100+t128+a=1+mu1+tau100+rep5+4', dtnBase='#')
+'''
+initialALL()
+for rep in range(1, 6):
+    specialTask(method='MLEM',
+                replicates=rep,
+                max_iter=1000,
+                nb_subsets=1,
+                threads=128,)  # mu= ?, tau = ?
+moveALL('MLEM+rep5+max1000sub1', dtnBase='#')

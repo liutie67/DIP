@@ -16,14 +16,14 @@ opti = 'Adam'
 scaling = 'standardization'
 thread = 128
 rep = 1
-optimizer = 'ADMMadpATi1o5000rep' + str(rep)
+optimizer = 'ADMMadpATi1o100*100rep' + str(rep)
 
 initialALL()
 timerStart = time.perf_counter()
 
-for lr in [0.007]:
+for lr in Tuners.lrs4:
     specialTask(method='nested',
-                random_seed=False,
+                random_seed=True,      # !
                 threads=thread,
                 all_images_DIP="True",
                 lr=lr,
@@ -35,9 +35,9 @@ for lr in [0.007]:
                 post_recon=True)
 
 timerEnd = time.perf_counter()
-moveALL('+randomInitialization8+' + optimizer
+moveALL('+' + optimizer
         + 'reps=5'
-        + '+lr=lr1'
+        + '+lr=lr4'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input

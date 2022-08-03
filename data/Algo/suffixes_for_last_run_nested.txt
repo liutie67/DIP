@@ -1,1 +1,1 @@
-config_rho=0_lr=0.007_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_sub_i=10_alpha=0.005_mlem_=False_NNEPP=False
+config_rho=0_lr=0.02_sub_i=1000_opti_=Adam_skip_=0_scali=standardization_input=CT_sub_i=10_alpha=0.005_mlem_=False_NNEPP=False
