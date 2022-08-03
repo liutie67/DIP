@@ -193,14 +193,14 @@ def computeThose4(f, image='image0'):
 
     # CRC hot
     # CRC_hot_recon.append(np.mean(hot_ROI_act) / 400.)
-    CRC_hot_recon = np.abs(np.mean(hot_ROI_act) - 400.)
+    CRC_hot_recon = np.mean(hot_ROI_act) - 400.
 
     cold_ROI = fijii_np(subroot + '/Data/database_v2/' + image + '/' + "cold_mask" + image[-1] + '.raw',
                         shape=getShape())
     cold_ROI_act = f_metric[cold_ROI == 1]
 
     # MA cold
-    MA_cold_recon = np.abs(np.mean(cold_ROI_act))
+    MA_cold_recon = np.mean(cold_ROI_act)
 
     return IR_bkg_recon, MSE_recon, CRC_hot_recon, MA_cold_recon
 
