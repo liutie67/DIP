@@ -21,7 +21,7 @@ optimizer = 'ADMMadpATi1o100*100rep' + str(rep)
 initialALL()
 timerStart = time.perf_counter()
 
-for lr in Tuners.lrs4:
+for lr in [0.012]:
     specialTask(method='nested',
                 random_seed=True,      # !
                 threads=thread,
@@ -35,9 +35,8 @@ for lr in Tuners.lrs4:
                 post_recon=True)
 
 timerEnd = time.perf_counter()
-moveALL('+' + optimizer
-        + 'reps=5'
-        + '+lr=lr4'
+moveALL('+w50p200+' + optimizer
+        + '+lr=0.012'
         + '+iter' + str(iter)
         + '+skip' + str(skip)
         + '+input' + input

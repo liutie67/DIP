@@ -8,8 +8,9 @@ open and save an .img image file to /home/liutie/Pictures.
 '''
 
 # absolute path
-path_img = '/home/liutie/stageSTING/DIP/data/Algo/image0/replicate_1/MLEM/config_mlem_=False_post_=0/MLEM_it1000.img'
+path_img = '/home/liutie/Documents/outputDatabaseA/2022-07-27+09-31-46ADMM+initial+i100+o100+t128+a=alphas0+mu1+tau100+rep5+0/replicate_1/ADMMLim_new/Comparison/ADMMLim_new/config_rho=0_sub_i=100_alpha=0.005_mlem_=False/ADMM_128/0_100_it100.img'
 name = ''
+FULLCONTRAST = False
 for letter in path_img[::-1]:
     if letter != '/':
         name += letter
@@ -20,7 +21,10 @@ for letter in path_img[::-1]:
 x_out = fijii_np(path_img, shape=getShape(), type='<d')
 
 plt.figure(1)
-plt.imshow(x_out, cmap='gray_r', vmin=0, vmax=500)
+if FULLCONTRAST:
+    plt.imshow(x_out, cmap='gray_r')
+else:
+    plt.imshow(x_out, cmap='gray_r', vmin=-5000, vmax=5000)
 plt.title(name)
 plt.colorbar()
 
