@@ -9,10 +9,10 @@ from show_functions import moveRuns, moveData, initialALL, moveALL
 # ADMMoptimizerName = ['ADMMLim_new', 'ADMMLim_adaptiveRho', 'ADMMLim_adaptiveRhoTau', 'ADMMLim_adaptiveRhoTau-m10', 'ADMMLim_adaptiveRhoTau-mx'] #
 #                            0                  1                       2                           3                             4               #
 admmInner = 1
-admmOuter = 800
+admmOuter = 1000
 admmAlpha = 1
 
-lr = 0.006
+lr = 0.012
 iter = 500
 skip = 0
 input = 'CT'
@@ -28,21 +28,24 @@ timerStart = time.perf_counter()
 
 initialALL()
 
-specialTask(method_special=optimizer,
-            max_iter=[globalIter],
-            replicates_special=1,
-            lr_special=[lr],
-            sub_iter_special=[iter],
-            opti_special=[opti],
-            skip_special=[skip],
-            scaling_special=[scaling],
-            input_special=[input],
-            inner_special=[admmInner],
-            outer_special=[admmOuter],
-            alpha_special=[admmAlpha],
-            rho_special=[rho],
-            nb_subsets=[28],
-            threads=[thread])
+specialTask(method='nested',
+            random_seed=True,
+            threads=thread,
+            max_iter=globalIter,
+            nb_subsets=28,
+            all_images_DIP="False",
+            replicates=1,
+            rho=rho,
+            lr=lr,
+            sub_iter_DIP=iter,
+            opti_DIP='Adam',
+            skip_connections=0,
+            scaling='standardization',
+            input='CT',
+            innerIter=admmInner,
+            outerIter=admmOuter,
+            alpha=admmAlpha,
+            post_recon=False)
 
 timerEnd = time.perf_counter()
 
@@ -56,5 +59,5 @@ moveALL('+' + optimizer
         + '+scaling' + scaling
         + '+t' + str(thread)
         + '+' + str(int(timerEnd - timerStart)) + 's',
-        dtnBase=19
+        dtnBase='#'
         )
